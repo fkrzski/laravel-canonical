@@ -1,0 +1,87 @@
+{
+    "name": ":vendor_slug/:package_slug",
+    "description": ":package_description",
+    "keywords": [
+        ":vendor_name",
+        ":package_slug"
+    ],
+    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":author_name",
+            "email": "author@domain.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "driftingly/rector-laravel": "^2.0.7",
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.17",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^9.0 | ^10.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "pestphp/pest-plugin-profanity": "^4.0",
+        "pestphp/pest-plugin-type-coverage": "^4.0",
+        "rector/rector": "^2.1.2",
+        "symfony/var-dumper": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "VendorName\\Skeleton\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VendorName\\Skeleton\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "lint": "pint",
+        "analyse": "phpstan",
+        "refactor": "rector",
+        "test:lint": "pint --test",
+        "test:profanity": "pest --profanity --compact",
+        "test:refactor": "rector --dry-run",
+        "test:syntax": "find . -path ./vendor -prune -o -type f -name \\\"*.php\\\" -print | xargs -P 2 -n 1 php -l",
+        "test:type-coverage": "pest --type-coverage --exactly=100 --compact",
+        "test:unit": "pest --parallel --coverage --exactly=100",
+        "test:unit:mutation": "pest --parallel --mutate --exactly=100",
+        "test": [
+            "@test:profanity",
+            "@test:syntax",
+            "@test:lint",
+            "@test:refactor",
+            "@analyse",
+            "@test:type-coverage",
+            "@test:unit:mutation"
+        ],
+        "code-quality": [
+            "@lint",
+            "@refactor"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "VendorName\\Skeleton\\SkeletonServiceProvider"
+            ],
+            "aliases": {
+                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

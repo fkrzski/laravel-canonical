@@ -1,0 +1,30 @@
+# Path-based git attributes
+# https://www.kernel.org/pub/software/scm/git/docs/gitattributes.html
+#
+# General setting
+*                   text=auto eol=lf
+
+# Language specific settings
+*.md                diff=markdown
+*.php               diff=php
+
+# Export-ignore settings
+/art                export-ignore
+/docs               export-ignore
+/tests              export-ignore
+/.github            export-ignore
+/.editorconfig      export-ignore
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/LICENSE.md         export-ignore
+/README.md          export-ignore
+/UPGRADING.md       export-ignore
+/phpstan.neon.dist  export-ignore
+/phpunit.xml.dist   export-ignore
+/pint.json          export-ignore
+/psalm.xml.dist     export-ignore
+/rector.php         export-ignore
+
+# Linguist settings
+*                   linguist-vendored=false
+*.php               linguist-language=PHP
