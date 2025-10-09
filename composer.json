@@ -1,16 +1,20 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "fkrzski/laravel-canonical",
+    "description": "Laravel package for managing canonical URLs and preventing duplicate content",
     "keywords": [
-        ":vendor_name",
-        ":package_slug"
+        "fkrzski",
+        "laravel-canonical",
+        "canonical",
+        "seo",
+        "laravel",
+        "php"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/fkrzski/laravel-canonical",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Filip Krzyżanowski",
+            "email": "filip.krzyzanowski@protonmail.com",
             "role": "Developer"
         }
     ],
@@ -33,12 +37,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src"
+            "Fkrzski\\LaravelCanonical\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Fkrzski\\LaravelCanonical\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -69,10 +73,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Fkrzski\\LaravelCanonical\\LaravelCanonicalServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "LaravelCanonical": "Fkrzski\\LaravelCanonical\\Facades\\LaravelCanonical"
             }
         }
     },

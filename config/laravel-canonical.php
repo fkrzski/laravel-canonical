@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 /**
- * Configuration file for :package_name
+ * Configuration file for Laravel Canonical
  *
  * You can publish this file with:
- * php artisan vendor:publish --tag=":package_slug-config"
+ * php artisan vendor:publish --tag="laravel-canonical-config"
  */
 return [
     /*

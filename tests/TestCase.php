@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace VendorName\Skeleton\Tests;
+namespace Fkrzski\LaravelCanonical\Tests;
 
+use Fkrzski\LaravelCanonical\LaravelCanonicalServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use VendorName\Skeleton\SkeletonServiceProvider;
 
 final class TestCase extends Orchestra
 {
     protected function getPackageProviders($app): array
     {
         return [
-            SkeletonServiceProvider::class,
+            LaravelCanonicalServiceProvider::class,
         ];
     }
 
     protected function getPackageAliases($app): array
     {
         return [
-            'Skeleton' => \VendorName\Skeleton\Facades\Skeleton::class,
+            'LaravelCanonical' => \Fkrzski\LaravelCanonical\Facades\LaravelCanonical::class,
         ];
     }
 

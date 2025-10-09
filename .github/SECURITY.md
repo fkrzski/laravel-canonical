@@ -13,7 +13,7 @@ This project is in pre-release development. Security policies will be formalized
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability within this package, please email **author@domain.com**. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within this package, please email **filip.krzyzanowski@protonmail.com**. All security vulnerabilities will be promptly addressed.
 
 Please do not disclose security-related issues publicly until they have been handled by the maintainers.
 

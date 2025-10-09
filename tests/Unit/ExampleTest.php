@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use VendorName\Skeleton\SkeletonClass;
+use Fkrzski\LaravelCanonical\LaravelCanonicalClass;
 
-mutates(SkeletonClass::class);
+mutates(LaravelCanonicalClass::class);
 
 it('foo', function (): void {
-    $example = new SkeletonClass;
+    $example = new LaravelCanonicalClass;
 
     expect($example)->toBeObject();
 });
