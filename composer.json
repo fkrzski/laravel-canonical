@@ -73,10 +73,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Fkrzski\\LaravelCanonical\\LaravelCanonicalServiceProvider"
+                "CanonicalServiceProvider"
             ],
             "aliases": {
-                "LaravelCanonical": "Fkrzski\\LaravelCanonical\\Facades\\LaravelCanonical"
+                "LaravelCanonical": "Canonical"
             }
         }
     },

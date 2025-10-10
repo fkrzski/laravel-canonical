@@ -4,28 +4,23 @@ declare(strict_types=1);
 
 namespace Fkrzski\LaravelCanonical\Tests;
 
-use Fkrzski\LaravelCanonical\LaravelCanonicalServiceProvider;
+use Fkrzski\LaravelCanonical\CanonicalServiceProvider;
+use Fkrzski\LaravelCanonical\Facades\Canonical;
 use Orchestra\Testbench\TestCase as Orchestra;
 
-final class TestCase extends Orchestra
+class TestCase extends Orchestra
 {
     protected function getPackageProviders($app): array
     {
         return [
-            LaravelCanonicalServiceProvider::class,
+            CanonicalServiceProvider::class,
         ];
     }
 
     protected function getPackageAliases($app): array
     {
         return [
-            'LaravelCanonical' => \Fkrzski\LaravelCanonical\Facades\LaravelCanonical::class,
+            'Canonical' => Canonical::class,
         ];
-    }
-
-    protected function getEnvironmentSetUp($app): void
-    {
-        // Setup environment if needed
-        // config()->set('database.default', 'testing');
     }
 }

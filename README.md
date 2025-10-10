@@ -1,7 +1,7 @@
 # Laravel package for managing canonical URLs and preventing duplicate content
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fkrzski/laravel-canonical.svg?style=for-the-badge)](https://packagist.org/packages/fkrzski/laravel-canonical)
-[![Tests](https://img.shields.io/github/actions/workflow/status/fkrzski/laravel-canonical/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/fkrzski/laravel-canonical/actions/workflows/run-tests.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/fkrzski/laravel-canonical/run-tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/fkrzski/laravel-canonical/actions/workflows/tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/fkrzski/laravel-canonical.svg?style=for-the-badge)](https://packagist.org/packages/fkrzski/laravel-canonical)
 
 This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
@@ -19,13 +19,13 @@ composer require fkrzski/laravel-canonical
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-canonical-config"
+php artisan vendor:publish --tag="canonical-config"
 ```
 
 ## Usage
 
 ```php
-$class = new Fkrzski\LaravelCanonical\LaravelCanonicalClass();
+$class = new Fkrzski\Canonical\LaravelCanonicalClass();
 echo $class->echoPhrase('Hello, Fkrzski!');
 ```
 
