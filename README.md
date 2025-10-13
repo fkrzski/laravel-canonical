@@ -25,7 +25,7 @@ php artisan vendor:publish --tag="canonical-config"
 ## Usage
 
 ```php
-$class = new Fkrzski\Canonical\LaravelCanonicalClass();
+$class = new Fkrzski\Canonical\CanonicalUrlGenerator();
 echo $class->echoPhrase('Hello, Fkrzski!');
 ```
 

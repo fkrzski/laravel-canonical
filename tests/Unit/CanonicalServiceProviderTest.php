@@ -3,7 +3,10 @@
 declare(strict_types=1);
 
 use Fkrzski\LaravelCanonical\CanonicalServiceProvider;
-use Fkrzski\LaravelCanonical\LaravelCanonicalClass;
+use Fkrzski\LaravelCanonical\CanonicalUrlGenerator;
+use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
+use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
+use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,15 +31,64 @@ describe('CanonicalServiceProvider', function (): void {
                 ->and($mergedConfig)->toHaveKey('domain');
         });
 
-        it('registers LaravelCanonicalClass as singleton', function (): void {
+        it('registers BaseUrlValidator as singleton', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            expect($this->app->bound(LaravelCanonicalClass::class))->toBeTrue();
+            expect($this->app->bound(BaseUrlValidator::class))->toBeTrue();
 
-            $instance1 = $this->app->make(LaravelCanonicalClass::class);
-            $instance2 = $this->app->make(LaravelCanonicalClass::class);
+            $instance1 = $this->app->make(BaseUrlValidator::class);
+            $instance2 = $this->app->make(BaseUrlValidator::class);
 
             expect($instance1)->toBe($instance2);
+        });
+
+        it('registers CanonicalUrlBuilder as singleton', function (): void {
+            (new CanonicalServiceProvider($this->app))->register();
+
+            expect($this->app->bound(CanonicalUrlBuilder::class))->toBeTrue();
+
+            $instance1 = $this->app->make(CanonicalUrlBuilder::class);
+            $instance2 = $this->app->make(CanonicalUrlBuilder::class);
+
+            expect($instance1)->toBe($instance2);
+        });
+
+        it('registers CanonicalConfig as singleton', function (): void {
+            (new CanonicalServiceProvider($this->app))->register();
+
+            expect($this->app->bound(CanonicalConfig::class))->toBeTrue();
+
+            $instance1 = $this->app->make(CanonicalConfig::class);
+            $instance2 = $this->app->make(CanonicalConfig::class);
+
+            expect($instance1)->toBe($instance2);
+        });
+
+        it('registers CanonicalUrlGenerator as singleton', function (): void {
+            (new CanonicalServiceProvider($this->app))->register();
+
+            expect($this->app->bound(CanonicalUrlGenerator::class))->toBeTrue();
+
+            $instance1 = $this->app->make(CanonicalUrlGenerator::class);
+            $instance2 = $this->app->make(CanonicalUrlGenerator::class);
+
+            expect($instance1)->toBe($instance2);
+        });
+
+        it('resolves CanonicalConfig with BaseUrlValidator dependency', function (): void {
+            (new CanonicalServiceProvider($this->app))->register();
+
+            $config = $this->app->make(CanonicalConfig::class);
+
+            expect($config)->toBeInstanceOf(CanonicalConfig::class);
+        });
+
+        it('resolves CanonicalUrlGenerator with all dependencies', function (): void {
+            (new CanonicalServiceProvider($this->app))->register();
+
+            $generator = $this->app->make(CanonicalUrlGenerator::class);
+
+            expect($generator)->toBeInstanceOf(CanonicalUrlGenerator::class);
         });
     });
 
@@ -68,12 +120,15 @@ describe('CanonicalServiceProvider', function (): void {
     });
 
     describe('provides method', function (): void {
-        it('returns array containing CanonicalService class', function (): void {
+        it('returns array containing all registered services', function (): void {
             $provides = (new CanonicalServiceProvider($this->app))->provides();
 
             expect($provides)->toBeArray()
-                ->and($provides)->toContain(LaravelCanonicalClass::class)
-                ->and($provides)->toHaveCount(1);
+                ->and($provides)->toContain(BaseUrlValidator::class)
+                ->and($provides)->toContain(CanonicalConfig::class)
+                ->and($provides)->toContain(CanonicalUrlBuilder::class)
+                ->and($provides)->toContain(CanonicalUrlGenerator::class)
+                ->and($provides)->toHaveCount(4);
         });
     });
 });

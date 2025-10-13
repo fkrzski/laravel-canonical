@@ -2,35 +2,118 @@
 
 declare(strict_types=1);
 
-describe('Canonical Config', function (): void {
-    it('has domain key in config', function (): void {
-        expect(config('canonical'))->toHaveKey('domain');
+use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
+use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;
+use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
+
+mutates(CanonicalConfig::class);
+
+describe('CanonicalConfig', function (): void {
+    describe('config file', function (): void {
+        it('has domain key in config', function (): void {
+            expect(config('canonical'))->toHaveKey('domain');
+        });
+
+        it('uses CANONICAL_DOMAIN env variable when set', function (): void {
+            putenv('CANONICAL_DOMAIN=https://example.com');
+            $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
+
+            expect(config('canonical.domain'))->toBe('https://example.com');
+
+            putenv('CANONICAL_DOMAIN');
+        });
+
+        it('falls back to APP_URL when CANONICAL_DOMAIN is not set', function (): void {
+            putenv('CANONICAL_DOMAIN');
+            putenv('APP_URL=https://app-url.com');
+            $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
+
+            expect(config('canonical.domain'))->toBe('https://app-url.com');
+
+            putenv('APP_URL');
+        });
+
+        it('falls back to http://localhost when neither env variable is set', function (): void {
+            putenv('CANONICAL_DOMAIN');
+            putenv('APP_URL');
+            $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
+
+            expect(config('canonical.domain'))->toBe('http://localhost');
+        });
     });
 
-    it('uses CANONICAL_DOMAIN env variable when set', function (): void {
-        putenv('CANONICAL_DOMAIN=https://example.com');
-        $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
+    describe('CanonicalConfig class', function (): void {
+        it('creates instance with valid URL', function (): void {
+            config(['canonical.domain' => 'https://example.com']);
 
-        expect(config('canonical.domain'))->toBe('https://example.com');
+            $config = new CanonicalConfig(new BaseUrlValidator());
 
-        putenv('CANONICAL_DOMAIN');
-    });
+            expect($config)->toBeInstanceOf(CanonicalConfig::class);
+        });
 
-    it('falls back to APP_URL when CANONICAL_DOMAIN is not set', function (): void {
-        putenv('CANONICAL_DOMAIN');
-        putenv('APP_URL=https://app-url.com');
-        $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
+        it('returns base URL without trailing slash', function (): void {
+            config(['canonical.domain' => 'https://example.com/']);
 
-        expect(config('canonical.domain'))->toBe('https://app-url.com');
+            $config = new CanonicalConfig(new BaseUrlValidator());
 
-        putenv('APP_URL');
-    });
+            expect($config->getBaseUrl())->toBe('https://example.com');
+        });
 
-    it('falls back to http://localhost when neither env variable is set', function (): void {
-        putenv('CANONICAL_DOMAIN');
-        putenv('APP_URL');
-        $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
+        it('returns base URL when already without trailing slash', function (): void {
+            config(['canonical.domain' => 'https://example.com']);
 
-        expect(config('canonical.domain'))->toBe('http://localhost');
+            $config = new CanonicalConfig(new BaseUrlValidator());
+
+            expect($config->getBaseUrl())->toBe('https://example.com');
+        });
+
+        it('throws exception when domain is empty', function (): void {
+            config(['canonical.domain' => '']);
+
+            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+                ->toThrow(CanonicalConfigurationException::class, 'Canonical domain is not set in config.');
+        });
+
+        it('throws exception when domain is not set', function (): void {
+            config(['canonical.domain' => null]);
+
+            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+                ->toThrow(InvalidArgumentException::class, 'Configuration value for key [canonical.domain] must be a string, NULL given.');
+        });
+
+        it('throws exception when domain is invalid URL', function (): void {
+            config(['canonical.domain' => 'not-a-url']);
+
+            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+                ->toThrow(CanonicalConfigurationException::class);
+        });
+
+        it('throws exception when domain has invalid scheme', function (): void {
+            config(['canonical.domain' => 'ftp://example.com']);
+
+            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+                ->toThrow(CanonicalConfigurationException::class, "Invalid URL scheme for 'ftp://example.com'. Only 'http' and 'https' schemes are allowed.");
+        });
+
+        it('throws exception when domain has no host', function (): void {
+            config(['canonical.domain' => 'https://']);
+
+            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+                ->toThrow(CanonicalConfigurationException::class, "Invalid URL format: 'https:'. Expected a valid URL.");
+        });
+
+        it('is readonly class', function (): void {
+            $reflection = new ReflectionClass(CanonicalConfig::class);
+
+            expect($reflection->isReadOnly())->toBeTrue();
+        });
+
+        it('validates URL on construction', function (): void {
+            config(['canonical.domain' => 'https://valid-domain.com']);
+
+            $config = new CanonicalConfig(new BaseUrlValidator());
+
+            expect($config->getBaseUrl())->toBe('https://valid-domain.com');
+        });
     });
 });

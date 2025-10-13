@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Fkrzski\LaravelCanonical;
 
+use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
+use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
+use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
 use Illuminate\Contracts\Support\DeferrableProvider;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
 final class CanonicalServiceProvider extends ServiceProvider implements DeferrableProvider
@@ -16,7 +20,17 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
             'canonical'
         );
 
-        $this->app->singleton(LaravelCanonicalClass::class, fn (): LaravelCanonicalClass => new LaravelCanonicalClass);
+        $this->app->singleton(BaseUrlValidator::class);
+        $this->app->singleton(CanonicalUrlBuilder::class);
+
+        $this->app->singleton(CanonicalConfig::class, fn (Application $app): CanonicalConfig => new CanonicalConfig(
+            $app->make(BaseUrlValidator::class)
+        ));
+
+        $this->app->singleton(CanonicalUrlGenerator::class, fn (Application $app): CanonicalUrlGenerator => new CanonicalUrlGenerator(
+            $app->make(CanonicalConfig::class),
+            $app->make(CanonicalUrlBuilder::class)
+        ));
     }
 
     public function boot(): void
@@ -32,7 +46,10 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
     public function provides(): array
     {
         return [
-            LaravelCanonicalClass::class,
+            BaseUrlValidator::class,
+            CanonicalConfig::class,
+            CanonicalUrlBuilder::class,
+            CanonicalUrlGenerator::class,
         ];
     }
 }
