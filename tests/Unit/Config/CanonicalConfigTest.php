@@ -46,7 +46,7 @@ describe('CanonicalConfig', function (): void {
         it('creates instance with valid URL', function (): void {
             config(['canonical.domain' => 'https://example.com']);
 
-            $config = new CanonicalConfig(new BaseUrlValidator());
+            $config = new CanonicalConfig(new BaseUrlValidator);
 
             expect($config)->toBeInstanceOf(CanonicalConfig::class);
         });
@@ -54,7 +54,7 @@ describe('CanonicalConfig', function (): void {
         it('returns base URL without trailing slash', function (): void {
             config(['canonical.domain' => 'https://example.com/']);
 
-            $config = new CanonicalConfig(new BaseUrlValidator());
+            $config = new CanonicalConfig(new BaseUrlValidator);
 
             expect($config->getBaseUrl())->toBe('https://example.com');
         });
@@ -62,7 +62,7 @@ describe('CanonicalConfig', function (): void {
         it('returns base URL when already without trailing slash', function (): void {
             config(['canonical.domain' => 'https://example.com']);
 
-            $config = new CanonicalConfig(new BaseUrlValidator());
+            $config = new CanonicalConfig(new BaseUrlValidator);
 
             expect($config->getBaseUrl())->toBe('https://example.com');
         });
@@ -70,35 +70,35 @@ describe('CanonicalConfig', function (): void {
         it('throws exception when domain is empty', function (): void {
             config(['canonical.domain' => '']);
 
-            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+            expect(fn (): CanonicalConfig => new CanonicalConfig(new BaseUrlValidator))
                 ->toThrow(CanonicalConfigurationException::class, 'Canonical domain is not set in config.');
         });
 
         it('throws exception when domain is not set', function (): void {
             config(['canonical.domain' => null]);
 
-            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+            expect(fn (): CanonicalConfig => new CanonicalConfig(new BaseUrlValidator))
                 ->toThrow(InvalidArgumentException::class, 'Configuration value for key [canonical.domain] must be a string, NULL given.');
         });
 
         it('throws exception when domain is invalid URL', function (): void {
             config(['canonical.domain' => 'not-a-url']);
 
-            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+            expect(fn (): CanonicalConfig => new CanonicalConfig(new BaseUrlValidator))
                 ->toThrow(CanonicalConfigurationException::class);
         });
 
         it('throws exception when domain has invalid scheme', function (): void {
             config(['canonical.domain' => 'ftp://example.com']);
 
-            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+            expect(fn (): CanonicalConfig => new CanonicalConfig(new BaseUrlValidator))
                 ->toThrow(CanonicalConfigurationException::class, "Invalid URL scheme for 'ftp://example.com'. Only 'http' and 'https' schemes are allowed.");
         });
 
         it('throws exception when domain has no host', function (): void {
             config(['canonical.domain' => 'https://']);
 
-            expect(fn () => new CanonicalConfig(new BaseUrlValidator()))
+            expect(fn (): CanonicalConfig => new CanonicalConfig(new BaseUrlValidator))
                 ->toThrow(CanonicalConfigurationException::class, "Invalid URL format: 'https:'. Expected a valid URL.");
         });
 
@@ -111,7 +111,7 @@ describe('CanonicalConfig', function (): void {
         it('validates URL on construction', function (): void {
             config(['canonical.domain' => 'https://valid-domain.com']);
 
-            $config = new CanonicalConfig(new BaseUrlValidator());
+            $config = new CanonicalConfig(new BaseUrlValidator);
 
             expect($config->getBaseUrl())->toBe('https://valid-domain.com');
         });

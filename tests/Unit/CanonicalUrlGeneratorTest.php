@@ -14,8 +14,8 @@ describe('CanonicalUrlGenerator', function (): void {
     beforeEach(function (): void {
         config(['canonical.domain' => 'https://example.com']);
 
-        $this->config = new CanonicalConfig(new BaseUrlValidator());
-        $this->builder = new CanonicalUrlBuilder();
+        $this->config = new CanonicalConfig(new BaseUrlValidator);
+        $this->builder = new CanonicalUrlBuilder;
         $this->generator = new CanonicalUrlGenerator($this->config, $this->builder);
     });
 
@@ -89,7 +89,7 @@ describe('CanonicalUrlGenerator', function (): void {
         it('uses CanonicalConfig for base URL', function (): void {
             config(['canonical.domain' => 'https://different-domain.com']);
 
-            $config = new CanonicalConfig(new BaseUrlValidator());
+            $config = new CanonicalConfig(new BaseUrlValidator);
             $generator = new CanonicalUrlGenerator($config, $this->builder);
 
             $url = $generator->generate('/page');
