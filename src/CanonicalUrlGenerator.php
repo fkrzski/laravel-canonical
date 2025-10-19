@@ -24,6 +24,6 @@ final readonly class CanonicalUrlGenerator
 
     private function resolveCurrentPath(): string
     {
-        return '/'.ltrim(request()->getRequestUri(), '/');
+        return request()->getRequestUri();
     }
 }

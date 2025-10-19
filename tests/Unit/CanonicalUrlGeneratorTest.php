@@ -77,6 +77,25 @@ describe('CanonicalUrlGenerator', function (): void {
             expect($url)->toBe('https://example.com/page?foo=bar&baz=qux');
         });
 
+        it('normalizes request path that already starts with slash', function (): void {
+            $request = Request::create('https://test.com//double-slash');
+            $this->app->instance('request', $request);
+
+            $url = $this->generator->generate();
+
+            expect($url)->toBe('https://example.com/double-slash');
+        });
+
+        it('handles request path without leading slash correctly', function (): void {
+            $request = new Request;
+            $request->server->set('REQUEST_URI', 'no-leading-slash');
+            $this->app->instance('request', $request);
+
+            $url = $this->generator->generate();
+
+            expect($url)->toBe('https://example.com/no-leading-slash');
+        });
+
         it('handles nested paths from request', function (): void {
             $request = Request::create('https://test.com/blog/category/post');
             $this->app->instance('request', $request);

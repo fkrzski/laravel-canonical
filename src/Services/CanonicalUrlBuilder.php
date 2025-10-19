@@ -8,6 +8,13 @@ final readonly class CanonicalUrlBuilder
 {
     public function build(string $baseUrl, string $path): string
     {
-        return trim(trim($baseUrl, '/').'/'.trim($path, '/'), '/');
+        $baseUrl = rtrim($baseUrl, '/');
+        $path = trim($path, '/');
+
+        if ($path === '') {
+            return $baseUrl;
+        }
+
+        return $baseUrl.'/'.$path;
     }
 }
