@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 use Fkrzski\LaravelCanonical\CanonicalUrlGenerator;
 use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
-use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalConfigInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlBuilderInterface;
 use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,8 @@ describe('CanonicalUrlGenerator', function (): void {
     beforeEach(function (): void {
         config(['canonical.domain' => 'https://example.com']);
 
-        $this->config = new CanonicalConfig(new BaseUrlValidator);
-        $this->builder = new CanonicalUrlBuilder;
+        $this->config = $this->app->make(CanonicalConfigInterface::class);
+        $this->builder = $this->app->make(CanonicalUrlBuilderInterface::class);
         $this->generator = new CanonicalUrlGenerator($this->config, $this->builder);
     });
 

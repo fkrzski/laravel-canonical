@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Fkrzski\LaravelCanonical;
 
 use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
+use Fkrzski\LaravelCanonical\Contracts\BaseUrlValidatorInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalConfigInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlBuilderInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlGeneratorInterface;
 use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
 use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -20,17 +24,30 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
             'canonical'
         );
 
-        $this->app->singleton(BaseUrlValidator::class);
-        $this->app->singleton(CanonicalUrlBuilder::class);
+        $this->app->singleton(BaseUrlValidatorInterface::class, BaseUrlValidator::class);
+        $this->app->singleton(CanonicalUrlBuilderInterface::class, CanonicalUrlBuilder::class);
 
-        $this->app->singleton(CanonicalConfig::class, fn (Application $app): CanonicalConfig => new CanonicalConfig(
-            $app->make(BaseUrlValidator::class)
-        ));
+        $this->app->singleton(CanonicalConfigInterface::class, function (Application $app): CanonicalConfig {
+            /** @var BaseUrlValidatorInterface $validator */
+            $validator = $app->make(BaseUrlValidatorInterface::class);
 
-        $this->app->singleton(CanonicalUrlGenerator::class, fn (Application $app): CanonicalUrlGenerator => new CanonicalUrlGenerator(
-            $app->make(CanonicalConfig::class),
-            $app->make(CanonicalUrlBuilder::class)
-        ));
+            return new CanonicalConfig(
+                validator: $validator,
+            );
+        });
+
+        $this->app->singleton(CanonicalUrlGeneratorInterface::class, function (Application $app): CanonicalUrlGenerator {
+            /** @var CanonicalConfigInterface $config */
+            $config = $app->make(CanonicalConfigInterface::class);
+
+            /** @var CanonicalUrlBuilderInterface $builder */
+            $builder = $app->make(CanonicalUrlBuilderInterface::class);
+
+            return new CanonicalUrlGenerator(
+                config: $config,
+                builder: $builder,
+            );
+        });
     }
 
     public function boot(): void
@@ -46,10 +63,10 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
     public function provides(): array
     {
         return [
-            BaseUrlValidator::class,
-            CanonicalConfig::class,
-            CanonicalUrlBuilder::class,
-            CanonicalUrlGenerator::class,
+            BaseUrlValidatorInterface::class,
+            CanonicalConfigInterface::class,
+            CanonicalUrlBuilderInterface::class,
+            CanonicalUrlGeneratorInterface::class,
         ];
     }
 }

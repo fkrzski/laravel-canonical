@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Fkrzski\LaravelCanonical\Validation;
 
+use Fkrzski\LaravelCanonical\Contracts\BaseUrlValidatorInterface;
 use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;
 
-final readonly class BaseUrlValidator
+final readonly class BaseUrlValidator implements BaseUrlValidatorInterface
 {
     /**
      * @throws CanonicalConfigurationException

@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Fkrzski\LaravelCanonical\CanonicalServiceProvider;
-use Fkrzski\LaravelCanonical\CanonicalUrlGenerator;
-use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
-use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
-use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
+use Fkrzski\LaravelCanonical\Contracts\BaseUrlValidatorInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalConfigInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlBuilderInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlGeneratorInterface;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -31,64 +31,64 @@ describe('CanonicalServiceProvider', function (): void {
                 ->and($mergedConfig)->toHaveKey('domain');
         });
 
-        it('registers BaseUrlValidator as singleton', function (): void {
+        it('registers BaseUrlValidatorInterface as singleton', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            expect($this->app->bound(BaseUrlValidator::class))->toBeTrue();
+            expect($this->app->bound(BaseUrlValidatorInterface::class))->toBeTrue();
 
-            $instance1 = $this->app->make(BaseUrlValidator::class);
-            $instance2 = $this->app->make(BaseUrlValidator::class);
+            $instance1 = $this->app->make(BaseUrlValidatorInterface::class);
+            $instance2 = $this->app->make(BaseUrlValidatorInterface::class);
 
             expect($instance1)->toBe($instance2);
         });
 
-        it('registers CanonicalUrlBuilder as singleton', function (): void {
+        it('registers CanonicalUrlBuilderInterface as singleton', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            expect($this->app->bound(CanonicalUrlBuilder::class))->toBeTrue();
+            expect($this->app->bound(CanonicalUrlBuilderInterface::class))->toBeTrue();
 
-            $instance1 = $this->app->make(CanonicalUrlBuilder::class);
-            $instance2 = $this->app->make(CanonicalUrlBuilder::class);
+            $instance1 = $this->app->make(CanonicalUrlBuilderInterface::class);
+            $instance2 = $this->app->make(CanonicalUrlBuilderInterface::class);
 
             expect($instance1)->toBe($instance2);
         });
 
-        it('registers CanonicalConfig as singleton', function (): void {
+        it('registers CanonicalConfigInterface as singleton', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            expect($this->app->bound(CanonicalConfig::class))->toBeTrue();
+            expect($this->app->bound(CanonicalConfigInterface::class))->toBeTrue();
 
-            $instance1 = $this->app->make(CanonicalConfig::class);
-            $instance2 = $this->app->make(CanonicalConfig::class);
+            $instance1 = $this->app->make(CanonicalConfigInterface::class);
+            $instance2 = $this->app->make(CanonicalConfigInterface::class);
 
             expect($instance1)->toBe($instance2);
         });
 
-        it('registers CanonicalUrlGenerator as singleton', function (): void {
+        it('registers CanonicalUrlGeneratorInterface as singleton', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            expect($this->app->bound(CanonicalUrlGenerator::class))->toBeTrue();
+            expect($this->app->bound(CanonicalUrlGeneratorInterface::class))->toBeTrue();
 
-            $instance1 = $this->app->make(CanonicalUrlGenerator::class);
-            $instance2 = $this->app->make(CanonicalUrlGenerator::class);
+            $instance1 = $this->app->make(CanonicalUrlGeneratorInterface::class);
+            $instance2 = $this->app->make(CanonicalUrlGeneratorInterface::class);
 
             expect($instance1)->toBe($instance2);
         });
 
-        it('resolves CanonicalConfig with BaseUrlValidator dependency', function (): void {
+        it('resolves CanonicalConfigInterface with BaseUrlValidatorInterface dependency', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            $config = $this->app->make(CanonicalConfig::class);
+            $config = $this->app->make(CanonicalConfigInterface::class);
 
-            expect($config)->toBeInstanceOf(CanonicalConfig::class);
+            expect($config)->toBeInstanceOf(CanonicalConfigInterface::class);
         });
 
-        it('resolves CanonicalUrlGenerator with all dependencies', function (): void {
+        it('resolves CanonicalUrlGeneratorInterface with all dependencies', function (): void {
             (new CanonicalServiceProvider($this->app))->register();
 
-            $generator = $this->app->make(CanonicalUrlGenerator::class);
+            $generator = $this->app->make(CanonicalUrlGeneratorInterface::class);
 
-            expect($generator)->toBeInstanceOf(CanonicalUrlGenerator::class);
+            expect($generator)->toBeInstanceOf(CanonicalUrlGeneratorInterface::class);
         });
     });
 
@@ -124,10 +124,10 @@ describe('CanonicalServiceProvider', function (): void {
             $provides = (new CanonicalServiceProvider($this->app))->provides();
 
             expect($provides)->toBeArray()
-                ->and($provides)->toContain(BaseUrlValidator::class)
-                ->and($provides)->toContain(CanonicalConfig::class)
-                ->and($provides)->toContain(CanonicalUrlBuilder::class)
-                ->and($provides)->toContain(CanonicalUrlGenerator::class)
+                ->and($provides)->toContain(BaseUrlValidatorInterface::class)
+                ->and($provides)->toContain(CanonicalConfigInterface::class)
+                ->and($provides)->toContain(CanonicalUrlBuilderInterface::class)
+                ->and($provides)->toContain(CanonicalUrlGeneratorInterface::class)
                 ->and($provides)->toHaveCount(4);
         });
     });

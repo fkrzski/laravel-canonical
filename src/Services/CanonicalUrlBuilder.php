@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Fkrzski\LaravelCanonical\Services;
 
-final readonly class CanonicalUrlBuilder
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlBuilderInterface;
+
+final readonly class CanonicalUrlBuilder implements CanonicalUrlBuilderInterface
 {
     public function build(string $baseUrl, string $path): string
     {

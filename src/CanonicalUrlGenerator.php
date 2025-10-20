@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Fkrzski\LaravelCanonical;
 
-use Fkrzski\LaravelCanonical\Config\CanonicalConfig;
-use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalConfigInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlBuilderInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlGeneratorInterface;
 
-final readonly class CanonicalUrlGenerator
+final readonly class CanonicalUrlGenerator implements CanonicalUrlGeneratorInterface
 {
     public function __construct(
-        private CanonicalConfig $config,
-        private CanonicalUrlBuilder $builder
+        private CanonicalConfigInterface $config,
+        private CanonicalUrlBuilderInterface $builder
     ) {}
 
     public function generate(?string $path = null): string

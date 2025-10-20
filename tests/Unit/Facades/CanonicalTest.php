@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Fkrzski\LaravelCanonical\CanonicalUrlGenerator;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlGeneratorInterface;
 use Fkrzski\LaravelCanonical\Facades\Canonical;
 use Illuminate\Support\Facades\Facade;
 
@@ -14,10 +14,10 @@ describe('Canonical Facade', function (): void {
     });
 
     it('returns correct facade accessor', function (): void {
-        expect(Canonical::getFacadeAccessor())->toBe(CanonicalUrlGenerator::class);
+        expect(Canonical::getFacadeAccessor())->toBe(CanonicalUrlGeneratorInterface::class);
     });
 
-    it('resolves to CanonicalUrlGenerator instance', function (): void {
-        expect(Canonical::getFacadeRoot())->toBeInstanceOf(CanonicalUrlGenerator::class);
+    it('resolves to CanonicalUrlGeneratorInterface instance', function (): void {
+        expect(Canonical::getFacadeRoot())->toBeInstanceOf(CanonicalUrlGeneratorInterface::class);
     });
 });

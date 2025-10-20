@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Fkrzski\LaravelCanonical\Config;
 
+use Fkrzski\LaravelCanonical\Contracts\BaseUrlValidatorInterface;
+use Fkrzski\LaravelCanonical\Contracts\CanonicalConfigInterface;
 use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;
-use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
 
-final readonly class CanonicalConfig
+final readonly class CanonicalConfig implements CanonicalConfigInterface
 {
     private string $baseUrl;
 
@@ -15,7 +16,7 @@ final readonly class CanonicalConfig
      * @throws CanonicalConfigurationException
      */
     public function __construct(
-        BaseUrlValidator $validator
+        BaseUrlValidatorInterface $validator
     ) {
         $domain = config()->string('canonical.domain');
 
