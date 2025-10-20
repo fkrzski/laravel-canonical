@@ -6,10 +6,11 @@ This project is in pre-release development. Security policies will be formalized
 
 ## Supported Versions
 
-| Version/branch      | Supported          |
-|---------------------|--------------------|
-| dev-master / master | :white_check_mark: |
-| Any other branch    | :x:                |
+| Version/branch   | Supported          |
+|------------------|--------------------|
+| 1.x.x            | :white_check_mark: |
+| master           | :white_check_mark: |
+| Any other branch | :x:                |
 
 ## Reporting a Vulnerability
 

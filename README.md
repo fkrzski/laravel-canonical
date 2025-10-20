@@ -6,6 +6,12 @@
 
 A lightweight Laravel package for generating canonical URLs to prevent duplicate content issues and improve SEO. Automatically normalizes URLs by removing trailing slashes while preserving query parameters.
 
+## Version Compatibility
+
+| Package Version | PHP Version | Laravel Version |
+|-----------------|-------------|-----------------|
+| 1.x.x           | 8.3+        | 11.x, 12.x     |
+
 ## Installation
 
 Install via Composer:
