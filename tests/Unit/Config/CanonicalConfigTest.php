@@ -14,6 +14,10 @@ describe('CanonicalConfig', function (): void {
             expect(config('canonical'))->toHaveKey('domain');
         });
 
+        it('has trim_trailing_slash key in config', function (): void {
+            expect(config('canonical'))->toHaveKey('trim_trailing_slash');
+        });
+
         it('uses CANONICAL_DOMAIN env variable when set', function (): void {
             putenv('CANONICAL_DOMAIN=https://example.com');
             $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
@@ -39,6 +43,31 @@ describe('CanonicalConfig', function (): void {
             $this->app['config']->set('canonical.domain', env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')));
 
             expect(config('canonical.domain'))->toBe('http://localhost');
+        });
+
+        it('uses CANONICAL_TRIM_TRAILING_SLASH env variable when set to true', function (): void {
+            putenv('CANONICAL_TRIM_TRAILING_SLASH=true');
+            $this->app['config']->set('canonical.trim_trailing_slash', env('CANONICAL_TRIM_TRAILING_SLASH', true));
+
+            expect(config('canonical.trim_trailing_slash'))->toBe('true');
+
+            putenv('CANONICAL_TRIM_TRAILING_SLASH');
+        });
+
+        it('uses CANONICAL_TRIM_TRAILING_SLASH env variable when set to false', function (): void {
+            putenv('CANONICAL_TRIM_TRAILING_SLASH=false');
+            $this->app['config']->set('canonical.trim_trailing_slash', env('CANONICAL_TRIM_TRAILING_SLASH', true));
+
+            expect(config('canonical.trim_trailing_slash'))->toBe('false');
+
+            putenv('CANONICAL_TRIM_TRAILING_SLASH');
+        });
+
+        it('defaults trim_trailing_slash to true when env variable is not set', function (): void {
+            putenv('CANONICAL_TRIM_TRAILING_SLASH');
+            $this->app['config']->set('canonical.trim_trailing_slash', env('CANONICAL_TRIM_TRAILING_SLASH', true));
+
+            expect(config('canonical.trim_trailing_slash'))->toBe(true);
         });
     });
 
@@ -118,6 +147,38 @@ describe('CanonicalConfig', function (): void {
             $config = new CanonicalConfig($this->validator);
 
             expect($config->getBaseUrl())->toBe('https://valid-domain.com');
+        });
+
+        it('returns true for shouldTrimTrailingSlash when config is true', function (): void {
+            config([
+                'canonical.domain' => 'https://example.com',
+                'canonical.trim_trailing_slash' => true,
+            ]);
+
+            $config = new CanonicalConfig($this->validator);
+
+            expect($config->shouldTrimTrailingSlash())->toBeTrue();
+        });
+
+        it('returns false for shouldTrimTrailingSlash when config is false', function (): void {
+            config([
+                'canonical.domain' => 'https://example.com',
+                'canonical.trim_trailing_slash' => false,
+            ]);
+
+            $config = new CanonicalConfig($this->validator);
+
+            expect($config->shouldTrimTrailingSlash())->toBeFalse();
+        });
+
+        it('defaults to true for shouldTrimTrailingSlash when not configured', function (): void {
+            config([
+                'canonical.domain' => 'https://example.com',
+            ]);
+
+            $config = new CanonicalConfig($this->validator);
+
+            expect($config->shouldTrimTrailingSlash())->toBeTrue();
         });
     });
 });

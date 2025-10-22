@@ -38,6 +38,22 @@ CANONICAL_DOMAIN=https://example.com
 
 If not set, it falls back to `APP_URL`.
 
+### Trailing Slash Configuration
+
+**@since 1.1.0**
+
+Control whether trailing slashes are removed from canonical URLs:
+
+```env
+# Remove trailing slashes (default behavior)
+CANONICAL_TRIM_TRAILING_SLASH=true
+
+# Preserve trailing slashes
+CANONICAL_TRIM_TRAILING_SLASH=false
+```
+
+When set to `true` (default), URLs are normalized by removing trailing slashes. When set to `false`, the original URL format is preserved.
+
 ## Usage
 
 ### In Blade Templates
@@ -72,10 +88,15 @@ Canonical::generate('/new-canonical-url'); // https://example.com/new-canonical-
 
 ### URL Normalization
 
-The package automatically:
+**With `CANONICAL_TRIM_TRAILING_SLASH=true` (default):**
 - Removes trailing slashes: `/blog/` → `/blog`
 - Preserves query parameters: `/search?q=test` stays intact
 - Normalizes root URL: `/` → `https://example.com`
+
+**With `CANONICAL_TRIM_TRAILING_SLASH=false` (@since 1.1.0):**
+- Preserves trailing slashes: `/blog/` → `/blog/`
+- Maintains original URL structure while still normalizing the domain
+- Useful when your application treats `/blog` and `/blog/` as different routes
 
 ## Use Cases
 
@@ -91,6 +112,16 @@ The package automatically:
 return [
     'domain' => env('CANONICAL_DOMAIN', config('app.url')),
 ];
+```
+
+**Preserve URL structure (@since 1.1.0):**
+```env
+# When your app treats /page and /page/ differently
+CANONICAL_TRIM_TRAILING_SLASH=false
+```
+```blade
+{{-- /blog/ stays as /blog/ --}}
+<link rel="canonical" href="{{ Canonical::generate() }}">
 ```
 
 ## Testing
