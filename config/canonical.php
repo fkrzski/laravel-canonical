@@ -20,4 +20,18 @@ return [
     |
     */
     'domain' => env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Trim Trailing Slash
+    |--------------------------------------------------------------------------
+    |
+    | Determines whether trailing slashes should be removed from generated
+    | canonical URLs. When set to true, URLs like /blog/ will be normalized
+    | to /blog. When set to false, the original URL format is preserved.
+    |
+    | @since 1.1.0
+    |
+    */
+    'trim_trailing_slash' => env('CANONICAL_TRIM_TRAILING_SLASH', true),
 ];
