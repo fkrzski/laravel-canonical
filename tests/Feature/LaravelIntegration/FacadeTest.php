@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 
 mutates(Canonical::class);
 
-describe('Canonical Facade', function (): void {
+describe('Laravel Integration - Facade', function (): void {
     it('extends Facade class', function (): void {
         expect(new Canonical)->toBeInstanceOf(Facade::class);
     });

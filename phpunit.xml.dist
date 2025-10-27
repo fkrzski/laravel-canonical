@@ -23,6 +23,10 @@
         <testsuite name="Unit tests">
             <directory>tests/Unit</directory>
         </testsuite>
+
+        <testsuite name="Feature tests">
+            <directory>tests/Feature</directory>
+        </testsuite>
     </testsuites>
 
     <coverage>
