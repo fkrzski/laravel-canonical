@@ -49,7 +49,7 @@ describe('CanonicalConfig', function (): void {
             putenv('CANONICAL_TRIM_TRAILING_SLASH=true');
             $this->app['config']->set('canonical.trim_trailing_slash', env('CANONICAL_TRIM_TRAILING_SLASH', true));
 
-            expect(config('canonical.trim_trailing_slash'))->toBe('true');
+            expect(config('canonical.trim_trailing_slash'))->toBe(true);
 
             putenv('CANONICAL_TRIM_TRAILING_SLASH');
         });
@@ -58,7 +58,7 @@ describe('CanonicalConfig', function (): void {
             putenv('CANONICAL_TRIM_TRAILING_SLASH=false');
             $this->app['config']->set('canonical.trim_trailing_slash', env('CANONICAL_TRIM_TRAILING_SLASH', true));
 
-            expect(config('canonical.trim_trailing_slash'))->toBe('false');
+            expect(config('canonical.trim_trailing_slash'))->toBe(false);
 
             putenv('CANONICAL_TRIM_TRAILING_SLASH');
         });

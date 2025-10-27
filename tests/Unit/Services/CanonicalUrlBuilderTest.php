@@ -74,6 +74,18 @@ describe('CanonicalUrlBuilder', function (): void {
 
             expect($result)->toBe('https://www.example.com/page');
         });
+
+        it('handles base URL with trailing slash and empty path', function (): void {
+            $result = $this->builder->build('https://example.com/', '');
+
+            expect($result)->toBe('https://example.com');
+        });
+
+        it('handles base URL with trailing slash and path without trailing slash', function (): void {
+            $result = $this->builder->build('https://example.com/', 'page');
+
+            expect($result)->toBe('https://example.com/page');
+        });
     });
 
     describe('build method with trim_trailing_slash disabled', function (): void {
@@ -101,10 +113,10 @@ describe('CanonicalUrlBuilder', function (): void {
             expect($result)->toBe('https://example.com/page');
         });
 
-        it('preserves multiple trailing slashes', function (): void {
+        it('deduplicate multiple trailing slashes', function (): void {
             $result = $this->builder->build('https://example.com', '/page//');
 
-            expect($result)->toBe('https://example.com/page//');
+            expect($result)->toBe('https://example.com/page/');
         });
 
         it('handles empty path', function (): void {
@@ -123,6 +135,24 @@ describe('CanonicalUrlBuilder', function (): void {
             $result = $this->builder->build('https://example.com', '/path/to/page/');
 
             expect($result)->toBe('https://example.com/path/to/page/');
+        });
+
+        it('handles base URL with trailing slash and empty path', function (): void {
+            $result = $this->builder->build('https://example.com/', '');
+
+            expect($result)->toBe('https://example.com/');
+        });
+
+        it('handles base URL with trailing slash and path without trailing slash', function (): void {
+            $result = $this->builder->build('https://example.com/', 'page');
+
+            expect($result)->toBe('https://example.com/page');
+        });
+
+        it('handles base URL with trailing slash and path with trailing slash', function (): void {
+            $result = $this->builder->build('https://example.com/', 'page/');
+
+            expect($result)->toBe('https://example.com/page/');
         });
     });
 });

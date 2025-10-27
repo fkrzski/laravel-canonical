@@ -34,7 +34,7 @@ final readonly class CanonicalConfig implements CanonicalConfigInterface
         $validator->validate($trimmedDomain);
 
         $this->baseUrl = $trimmedDomain;
-        $this->trimTrailingSlash = config()->boolean('canonical.trim_trailing_slash', true);
+        $this->trimTrailingSlash = config()->boolean('canonical.trim_trailing_slash');
     }
 
     public function getBaseUrl(): string

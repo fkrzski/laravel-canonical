@@ -141,6 +141,9 @@ describe('CanonicalUrlGenerator', function (): void {
         });
 
         it('preserves trailing slash when trim_trailing_slash is false', function (): void {
+            $this->app->forgetInstance(CanonicalConfigInterface::class);
+            $this->app->forgetInstance(CanonicalUrlBuilderInterface::class);
+
             config([
                 'canonical.domain' => 'https://example.com',
                 'canonical.trim_trailing_slash' => false,
@@ -156,12 +159,78 @@ describe('CanonicalUrlGenerator', function (): void {
         });
 
         it('uses current request with preserved trailing slash', function (): void {
+            $this->app->forgetInstance(CanonicalConfigInterface::class);
+            $this->app->forgetInstance(CanonicalUrlBuilderInterface::class);
+
             config([
                 'canonical.domain' => 'https://example.com',
                 'canonical.trim_trailing_slash' => false,
             ]);
 
             $request = Request::create('https://test.com/current-page/');
+            $this->app->instance('request', $request);
+
+            $config = new CanonicalConfig(new BaseUrlValidator);
+            $builder = $this->app->make(CanonicalUrlBuilderInterface::class);
+            $generator = new CanonicalUrlGenerator($config, $builder);
+
+            $url = $generator->generate();
+
+            expect($url)->toBe('https://example.com/current-page/');
+        });
+
+        it('uses current request with preserved trailing slash for only domain', function (): void {
+            $this->app->forgetInstance(CanonicalConfigInterface::class);
+            $this->app->forgetInstance(CanonicalUrlBuilderInterface::class);
+
+            config([
+                'canonical.domain' => 'https://example.com',
+                'canonical.trim_trailing_slash' => false,
+            ]);
+
+            $request = Request::create('https://test.com/');
+            $this->app->instance('request', $request);
+
+            $config = new CanonicalConfig(new BaseUrlValidator);
+            $builder = $this->app->make(CanonicalUrlBuilderInterface::class);
+            $generator = new CanonicalUrlGenerator($config, $builder);
+
+            $url = $generator->generate();
+
+            expect($url)->toBe('https://example.com/');
+        });
+
+        it('deduplicates trailing slash and preserves it for domain', function (): void {
+            $this->app->forgetInstance(CanonicalConfigInterface::class);
+            $this->app->forgetInstance(CanonicalUrlBuilderInterface::class);
+
+            config([
+                'canonical.domain' => 'https://example.com',
+                'canonical.trim_trailing_slash' => false,
+            ]);
+
+            $request = Request::create('https://test.com////');
+            $this->app->instance('request', $request);
+
+            $config = new CanonicalConfig(new BaseUrlValidator);
+            $builder = $this->app->make(CanonicalUrlBuilderInterface::class);
+            $generator = new CanonicalUrlGenerator($config, $builder);
+
+            $url = $generator->generate();
+
+            expect($url)->toBe('https://example.com/');
+        });
+
+        it('deduplicates trailing slash and preserves it for path', function (): void {
+            $this->app->forgetInstance(CanonicalConfigInterface::class);
+            $this->app->forgetInstance(CanonicalUrlBuilderInterface::class);
+
+            config([
+                'canonical.domain' => 'https://example.com',
+                'canonical.trim_trailing_slash' => false,
+            ]);
+
+            $request = Request::create('https://test.com/current-page///');
             $this->app->instance('request', $request);
 
             $config = new CanonicalConfig(new BaseUrlValidator);

@@ -15,18 +15,27 @@ final readonly class CanonicalUrlBuilder implements CanonicalUrlBuilderInterface
 
     public function build(string $baseUrl, string $path): string
     {
-        $baseUrl = rtrim($baseUrl, '/');
+        $baseUrlHadTrailingSlash = str_ends_with($baseUrl, '/');
+        $pathHadTrailingSlash = str_ends_with($path, '/');
 
-        if ($this->config->shouldTrimTrailingSlash()) {
-            $path = trim($path, '/');
-        } else {
-            $path = ltrim($path, '/');
+        $baseUrl = rtrim($baseUrl, '/');
+        $path = trim($path, '/');
+
+        if (! $this->config->shouldTrimTrailingSlash() && $pathHadTrailingSlash && $path !== '') {
+            $path .= '/';
         }
 
         if ($path === '') {
-            return $baseUrl;
+            return $this->shouldAddTrailingSlashForEmptyPath($baseUrlHadTrailingSlash, $pathHadTrailingSlash)
+                ? $baseUrl.'/'
+                : $baseUrl;
         }
 
         return $baseUrl.'/'.$path;
+    }
+
+    private function shouldAddTrailingSlashForEmptyPath(bool $baseUrlHadTrailingSlash, bool $pathHadTrailingSlash): bool
+    {
+        return ($baseUrlHadTrailingSlash || $pathHadTrailingSlash) && ! $this->config->shouldTrimTrailingSlash();
     }
 }
