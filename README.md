@@ -1,7 +1,7 @@
 # Laravel Canonical URLs
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fkrzski/laravel-canonical.svg?style=for-the-badge)](https://packagist.org/packages/fkrzski/laravel-canonical)
-[![Tests](https://img.shields.io/github/actions/workflow/status/fkrzski/laravel-canonical/tests.yml?branch=main&label=tests&style=for-the-badge)](https://github.com/fkrzski/laravel-canonical/actions/workflows/tests.yml)
+[![Tests](https://img.shields.io/github/actions/workflow/status/fkrzski/laravel-canonical/tests.yml?branch=master&label=tests&style=for-the-badge)](https://github.com/fkrzski/laravel-canonical/actions/workflows/tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/fkrzski/laravel-canonical.svg?style=for-the-badge)](https://packagist.org/packages/fkrzski/laravel-canonical)
 
 A lightweight Laravel package for generating canonical URLs to prevent duplicate content issues and improve SEO. Automatically normalizes URLs by removing trailing slashes while preserving query parameters.
