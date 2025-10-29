@@ -69,8 +69,8 @@
             "@test:unit:mutation"
         ],
         "code-quality": [
-            "@refactor",
-            "@lint"
+            "@lint",
+            "@refactor"
         ]
     },
     "extra": {
