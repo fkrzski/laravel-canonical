@@ -38,7 +38,10 @@
     "autoload": {
         "psr-4": {
             "Fkrzski\\LaravelCanonical\\": "src"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -66,8 +69,8 @@
             "@test:unit:mutation"
         ],
         "code-quality": [
-            "@lint",
-            "@refactor"
+            "@refactor",
+            "@lint"
         ]
     },
     "extra": {
