@@ -23,10 +23,6 @@ final class Canonical extends Component
 
     public function canonicalUrl(): string
     {
-        if ($this->path === null) {
-            return canonical()->generate();
-        }
-
-        return canonical($this->path);
+        return canonical()->generate($this->path);
     }
 }
