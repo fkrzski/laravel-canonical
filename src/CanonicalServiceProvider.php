@@ -11,8 +11,10 @@ use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlBuilderInterface;
 use Fkrzski\LaravelCanonical\Contracts\CanonicalUrlGeneratorInterface;
 use Fkrzski\LaravelCanonical\Services\CanonicalUrlBuilder;
 use Fkrzski\LaravelCanonical\Validation\BaseUrlValidator;
+use Fkrzski\LaravelCanonical\View\Components\Canonical;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
 final class CanonicalServiceProvider extends ServiceProvider implements DeferrableProvider
@@ -52,10 +54,20 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
 
     public function boot(): void
     {
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'canonical');
+
+        Blade::component('canonical', Canonical::class);
+
+        Blade::directive('canonical', fn (?string $expression = null): string => "<?php echo sprintf('<link rel=\"canonical\" href=\"%s\" />', e(canonical()->generate($expression))); ?>");
+
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__.'/../config/canonical.php' => config_path('canonical.php'),
             ], 'canonical-config');
+
+            $this->publishes([
+                __DIR__.'/../resources/views' => resource_path('views/vendor/canonical'),
+            ], 'canonical-views');
         }
     }
 

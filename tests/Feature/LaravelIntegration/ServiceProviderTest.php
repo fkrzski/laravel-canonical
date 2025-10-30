@@ -35,7 +35,7 @@ describe('Laravel Integration - Service Provider', function (): void {
             (new CanonicalServiceProvider($this->app))->boot();
 
             $publishes = ServiceProvider::$publishes[CanonicalServiceProvider::class] ?? [];
-            expect($publishes)->toHaveCount(1);
+            expect($publishes)->toHaveCount(2);
 
             $expectedConfigPath = Str::replace('/tests/Feature/LaravelIntegration', '/src', __DIR__.'/../config/canonical.php');
             $expectedPublishPath = config_path('canonical.php');
@@ -51,7 +51,8 @@ describe('Laravel Integration - Service Provider', function (): void {
 
             $publishGroups = ServiceProvider::$publishGroups;
 
-            expect($publishGroups)->toHaveKey('canonical-config');
+            expect($publishGroups)->toHaveKey('canonical-config')
+                ->and($publishGroups)->toHaveKey('canonical-views');
         });
     });
 

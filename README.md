@@ -56,9 +56,74 @@ When set to `true` (default), URLs are normalized by removing trailing slashes. 
 
 ## Usage
 
-### In Blade Templates
+### Blade Components
 
-Generate canonical URLs in your views:
+**@since 1.2.0**
+
+The package provides three convenient ways to add canonical link tags in your Blade templates:
+
+#### 1. Using Blade Component
+
+```blade
+<head>
+    {{-- Use current request URL --}}
+    <x-canonical />
+
+    {{-- Specify custom path --}}
+    <x-canonical path="/products/item" />
+
+    {{-- Use dynamic path --}}
+    <x-canonical :path="$post->canonical_path" />
+</head>
+```
+
+#### 2. Using Helper Function
+
+The `canonical()` helper provides a hybrid approach - it can return either the generator instance or a URL string:
+
+```blade
+<head>
+    {{-- Direct URL generation --}}
+    <link rel="canonical" href="{{ canonical('/products/item') }}" />
+
+    {{-- Fluent usage (without arguments returns generator) --}}
+    <link rel="canonical" href="{{ canonical()->generate('/products/item') }}" />
+
+    {{-- Use current request URL --}}
+    <link rel="canonical" href="{{ canonical()->generate() }}" />
+
+    {{-- Also works in PHP code --}}
+    @php
+        $url = canonical('/products/item'); // Returns: "https://example.com/products/item"
+        $generator = canonical(); // Returns: CanonicalUrlGeneratorInterface instance
+    @endphp
+</head>
+```
+
+#### 3. Using Blade Directive
+
+```blade
+<head>
+    {{-- Use current request URL --}}
+    @canonical
+
+    {{-- Specify custom path --}}
+    @canonical('/products/item')
+
+    {{-- Use variable --}}
+    @canonical($canonicalPath)
+</head>
+```
+
+#### All Three Methods Generate:
+
+```html
+<link rel="canonical" href="https://example.com/products/item" />
+```
+
+### In Blade Templates (Facade)
+
+Generate canonical URLs in your views using the Facade:
 
 ```blade
 <head>
