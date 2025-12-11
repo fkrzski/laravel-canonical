@@ -1,16 +1,15 @@
 # Security Policy
 
-## Note
-
-This project is in pre-release development. Security policies will be formalized with the first stable release (v1.0.0).
-
 ## Supported Versions
 
-| Version/branch   | Supported          |
-|------------------|--------------------|
-| 1.x.x            | :white_check_mark: |
-| master           | :white_check_mark: |
-| Any other branch | :x:                |
+We actively support only the latest minor version of the package with security updates.
+
+| Version/branch | Supported          |
+|----------------|--------------------|
+| 1.3.x          | :white_check_mark: |
+| < 1.3          | :x:                |
+
+**Note:** Security fixes are released for the latest version only. Please upgrade to receive security updates.
 
 ## Reporting a Vulnerability
 
