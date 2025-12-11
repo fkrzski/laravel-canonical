@@ -19,7 +19,7 @@ describe('Laravel Integration - Service Provider', function (): void {
 
     describe('register method', function (): void {
         it('merges config from package config file', function (): void {
-            (new CanonicalServiceProvider($this->app))->register();
+            new CanonicalServiceProvider($this->app)->register();
 
             $mergedConfig = config('canonical');
 
@@ -32,7 +32,7 @@ describe('Laravel Integration - Service Provider', function (): void {
         it('publishes config when running in console', function (): void {
             ServiceProvider::$publishes = [];
 
-            (new CanonicalServiceProvider($this->app))->boot();
+            new CanonicalServiceProvider($this->app)->boot();
 
             $publishes = ServiceProvider::$publishes[CanonicalServiceProvider::class] ?? [];
             expect($publishes)->toHaveCount(2);
@@ -47,7 +47,7 @@ describe('Laravel Integration - Service Provider', function (): void {
         it('publishes config with correct tag', function (): void {
             ServiceProvider::$publishGroups = [];
 
-            (new CanonicalServiceProvider($this->app))->boot();
+            new CanonicalServiceProvider($this->app)->boot();
 
             $publishGroups = ServiceProvider::$publishGroups;
 
@@ -58,7 +58,7 @@ describe('Laravel Integration - Service Provider', function (): void {
 
     describe('provides method', function (): void {
         it('returns array containing all registered services', function (): void {
-            $provides = (new CanonicalServiceProvider($this->app))->provides();
+            $provides = new CanonicalServiceProvider($this->app)->provides();
 
             expect($provides)->toBeArray()
                 ->and($provides)->toContain(Fkrzski\LaravelCanonical\Contracts\BaseUrlValidatorInterface::class)

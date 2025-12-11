@@ -35,7 +35,7 @@ describe('Blade Components - Component Registration', function (): void {
     });
 
     it('helper function is available after service provider boot', function (): void {
-        (new CanonicalServiceProvider($this->app))->boot();
+        new CanonicalServiceProvider($this->app)->boot();
 
         expect(function_exists('canonical'))->toBeTrue();
     });
@@ -55,7 +55,7 @@ describe('Blade Components - Component Registration', function (): void {
     it('publishes views with canonical-views tag', function (): void {
         ServiceProvider::$publishGroups = [];
 
-        (new CanonicalServiceProvider($this->app))->boot();
+        new CanonicalServiceProvider($this->app)->boot();
 
         $publishGroups = ServiceProvider::$publishGroups;
 
@@ -70,9 +70,8 @@ describe('Blade Components - Component Registration', function (): void {
 
         expect($sourcePath)->toContain('resources/views')
             ->and($sourcePath)->toContain('src')
-            ->and($sourcePath)->toEndWith('resources/views');
-
-        // Verify the path is absolute and correctly formed
-        expect(is_dir($sourcePath))->toBeTrue();
+            ->and($sourcePath)->toEndWith('resources/views')
+            // Verify the path is absolute and correctly formed
+            ->and(is_dir($sourcePath))->toBeTrue();
     });
 });

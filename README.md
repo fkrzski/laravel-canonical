@@ -9,8 +9,9 @@ A lightweight Laravel package for generating canonical URLs to prevent duplicate
 ## Version Compatibility
 
 | Package Version | PHP Version | Laravel Version |
-|-----------------|-------------|-----------------|
-| 1.x.x           | 8.3+        | 11.x, 12.x     |
+|----------------|-------------|-----------------|
+| 1.3.x+         | 8.4+        | 11.x, 12.x     |
+| 1.0.x - 1.2.x  | 8.3+        | 11.x, 12.x     |
 
 ## Installation
 

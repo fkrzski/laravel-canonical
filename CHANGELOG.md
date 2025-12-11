@@ -1,7 +1,5 @@
 # Changelog
 
-All notable changes to `Laravel Canonical` will be documented in this file.
-
 ## 1.2.0 - 2025-10-30
 
 ### What's Changed

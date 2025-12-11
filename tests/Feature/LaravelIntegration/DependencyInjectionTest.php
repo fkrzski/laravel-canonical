@@ -12,7 +12,7 @@ mutates(CanonicalServiceProvider::class);
 
 describe('Laravel Integration - Dependency Injection', function (): void {
     it('registers BaseUrlValidatorInterface as singleton', function (): void {
-        (new CanonicalServiceProvider($this->app))->register();
+        new CanonicalServiceProvider($this->app)->register();
 
         expect($this->app->bound(BaseUrlValidatorInterface::class))->toBeTrue();
 
@@ -23,7 +23,7 @@ describe('Laravel Integration - Dependency Injection', function (): void {
     });
 
     it('registers CanonicalUrlBuilderInterface as singleton', function (): void {
-        (new CanonicalServiceProvider($this->app))->register();
+        new CanonicalServiceProvider($this->app)->register();
 
         expect($this->app->bound(CanonicalUrlBuilderInterface::class))->toBeTrue();
 
@@ -34,7 +34,7 @@ describe('Laravel Integration - Dependency Injection', function (): void {
     });
 
     it('registers CanonicalConfigInterface as singleton', function (): void {
-        (new CanonicalServiceProvider($this->app))->register();
+        new CanonicalServiceProvider($this->app)->register();
 
         expect($this->app->bound(CanonicalConfigInterface::class))->toBeTrue();
 
@@ -45,7 +45,7 @@ describe('Laravel Integration - Dependency Injection', function (): void {
     });
 
     it('registers CanonicalUrlGeneratorInterface as singleton', function (): void {
-        (new CanonicalServiceProvider($this->app))->register();
+        new CanonicalServiceProvider($this->app)->register();
 
         expect($this->app->bound(CanonicalUrlGeneratorInterface::class))->toBeTrue();
 
@@ -56,7 +56,7 @@ describe('Laravel Integration - Dependency Injection', function (): void {
     });
 
     it('resolves CanonicalConfigInterface with BaseUrlValidatorInterface dependency', function (): void {
-        (new CanonicalServiceProvider($this->app))->register();
+        new CanonicalServiceProvider($this->app)->register();
 
         $config = $this->app->make(CanonicalConfigInterface::class);
 
@@ -64,7 +64,7 @@ describe('Laravel Integration - Dependency Injection', function (): void {
     });
 
     it('resolves CanonicalUrlGeneratorInterface with all dependencies', function (): void {
-        (new CanonicalServiceProvider($this->app))->register();
+        new CanonicalServiceProvider($this->app)->register();
 
         $generator = $this->app->make(CanonicalUrlGeneratorInterface::class);
 
