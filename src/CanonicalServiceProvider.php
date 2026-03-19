@@ -56,7 +56,7 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'canonical');
 
-        Blade::component(Canonical::class, 'canonical');
+        Blade::aliasComponent(Canonical::class, 'canonical');
 
         Blade::directive('canonical', fn (?string $expression = null): string => "<?php echo sprintf('<link rel=\"canonical\" href=\"%s\" />', e(canonical()->generate($expression))); ?>");
 
