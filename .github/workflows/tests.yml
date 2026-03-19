@@ -53,13 +53,13 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         php: [8.4, 8.5]
-        laravel: [11, 12]
+        laravel: [12, 13]
         dependency-version: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 11
-            testbench: "^9.0"
           - laravel: 12
             testbench: "^10.5"
+          - laravel: 13
+            testbench: "^11.0"
 
     name: Tests P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
 

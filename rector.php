@@ -28,6 +28,7 @@ use RectorLaravel\Rector\StaticCall\AssertWithClassStringToTypeHintedClosureRect
 use RectorLaravel\Rector\StaticCall\DispatchToHelperFunctionsRector;
 use RectorLaravel\Rector\StaticCall\EloquentMagicMethodToQueryBuilderRector;
 use RectorLaravel\Rector\StaticCall\RouteActionCallableRector;
+use RectorLaravel\Set\LaravelLevelSetList;
 use RectorLaravel\Set\LaravelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -67,13 +68,13 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->sets([
-        LaravelSetList::LARAVEL_110,
+        LaravelSetList::LARAVEL_120,
+        LaravelLevelSetList::UP_TO_LARAVEL_120,
         LevelSetList::UP_TO_PHP_84,
         SetList::CODE_QUALITY,
         SetList::DEAD_CODE,
         SetList::EARLY_RETURN,
         SetList::PHP_84,
-        SetList::STRICT_BOOLEANS,
         SetList::TYPE_DECLARATION,
     ]);
 };

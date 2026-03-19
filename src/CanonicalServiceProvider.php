@@ -29,7 +29,7 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
         $this->app->singleton(BaseUrlValidatorInterface::class, BaseUrlValidator::class);
         $this->app->singleton(CanonicalUrlBuilderInterface::class, CanonicalUrlBuilder::class);
 
-        $this->app->singleton(CanonicalConfigInterface::class, function (Application $app): CanonicalConfig {
+        $this->app->singleton(function (Application $app): CanonicalConfigInterface {
             /** @var BaseUrlValidatorInterface $validator */
             $validator = $app->make(BaseUrlValidatorInterface::class);
 
@@ -38,7 +38,7 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
             );
         });
 
-        $this->app->singleton(CanonicalUrlGeneratorInterface::class, function (Application $app): CanonicalUrlGenerator {
+        $this->app->singleton(function (Application $app): CanonicalUrlGeneratorInterface {
             /** @var CanonicalConfigInterface $config */
             $config = $app->make(CanonicalConfigInterface::class);
 
@@ -56,7 +56,7 @@ final class CanonicalServiceProvider extends ServiceProvider implements Deferrab
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'canonical');
 
-        Blade::component('canonical', Canonical::class);
+        Blade::aliasComponent('canonical', Canonical::class);
 
         Blade::directive('canonical', fn (?string $expression = null): string => "<?php echo sprintf('<link rel=\"canonical\" href=\"%s\" />', e(canonical()->generate($expression))); ?>");
 

@@ -6,8 +6,8 @@ We actively support only the latest minor version of the package with security u
 
 | Version/branch | Supported          |
 |----------------|--------------------|
-| 1.3.x          | :white_check_mark: |
-| < 1.3          | :x:                |
+| 1.4.x          | :white_check_mark: |
+| < 1.4          | :x:                |
 
 **Note:** Security fixes are released for the latest version only. Please upgrade to receive security updates.
 
