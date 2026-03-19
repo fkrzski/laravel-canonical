@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.0 - 2026-03-19
+
+### What's Changed
+
+* Updated Laravel compatibility to 12.x/13.x, refined service bindings,… by @fkrzski in https://github.com/fkrzski/laravel-canonical/pull/9
+
+**Full Changelog**: https://github.com/fkrzski/laravel-canonical/compare/1.3.0...1.4.0
+
 ## 1.3.0 - 2025-12-11
 
 ### What's Changed
