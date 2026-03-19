@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
+use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
 use RectorLaravel\Rector\BooleanNot\AvoidNegatedCollectionContainsOrDoesntContainRector;
@@ -40,6 +41,7 @@ return static function (RectorConfig $rectorConfig): void {
 
     $rectorConfig->skip([
         AddOverrideAttributeToOverriddenMethodsRector::class,
+        RenameMethodRector::class,
     ]);
 
     $rectorConfig->rules([
