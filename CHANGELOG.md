@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.1 - 2026-07-26
+
+### What's Changed
+
+* Add project documentation and validation workflow by @fkrzski in https://github.com/fkrzski/laravel-canonical/pull/12
+
+**Full Changelog**: https://github.com/fkrzski/laravel-canonical/compare/1.4.0...1.4.1
+
 ## 1.4.0 - 2026-03-19
 
 ### What's Changed
