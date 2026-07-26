@@ -110,7 +110,7 @@ provider binds these contracts as singletons; resolve them directly for custom
 wiring or testing:
 
 | Contract | Bound to |
-|----------|----------|
+| --- | --- |
 | `CanonicalUrlGeneratorInterface` | `CanonicalUrlGenerator` |
 | `CanonicalConfigInterface` | `CanonicalConfig` |
 | `CanonicalUrlBuilderInterface` | `CanonicalUrlBuilder` |

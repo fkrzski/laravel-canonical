@@ -46,10 +46,9 @@ still emit the canonical apex URL.
 
 ## Trailing-slash handling
 
-**@since 1.1.0**
-
-By default, trailing slashes are trimmed so `/blog/` and `/blog` collapse to one
-canonical URL. Flip it off when your application treats the two as distinct routes:
+Trailing-slash handling is configurable **since 1.1.0**. By default, trailing
+slashes are trimmed so `/blog/` and `/blog` collapse to one canonical URL. Flip it
+off when your application treats the two as distinct routes:
 
 ```dotenv
 # Trim trailing slashes (default)
@@ -59,11 +58,11 @@ CANONICAL_TRIM_TRAILING_SLASH=true
 CANONICAL_TRIM_TRAILING_SLASH=false
 ```
 
-| Input      | `true` (default)          | `false`                    |
-|------------|---------------------------|----------------------------|
-| `/blog/`   | `https://example.com/blog`  | `https://example.com/blog/`  |
-| `/blog`    | `https://example.com/blog`  | `https://example.com/blog`   |
-| `/`        | `https://example.com`       | `https://example.com`        |
+| Input | `true` (default) | `false` |
+| --- | --- | --- |
+| `/blog/` | `https://example.com/blog` | `https://example.com/blog/` |
+| `/blog` | `https://example.com/blog` | `https://example.com/blog` |
+| `/` | `https://example.com` | `https://example.com` |
 
 Query parameters are preserved under both settings.
 
@@ -87,7 +86,7 @@ A trailing slash on the domain itself is stripped before validation, so
 ## Version compatibility
 
 | Package version | PHP version | Laravel version |
-|-----------------|-------------|-----------------|
-| 1.4.x+          | 8.4+        | 12.x, 13.x      |
-| 1.3.x+          | 8.4+        | 11.x, 12.x      |
-| 1.0.x – 1.2.x   | 8.3+        | 11.x, 12.x      |
+| --- | --- | --- |
+| 1.4.x+ | 8.4+ | 12.x, 13.x |
+| 1.3.x+ | 8.4+ | 11.x, 12.x |
+| 1.0.x – 1.2.x | 8.3+ | 11.x, 12.x |
