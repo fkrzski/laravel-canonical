@@ -60,8 +60,9 @@ other entities are safe in an attribute.
 
 The `canonical()` helper is a hybrid: called **with** a path it returns the URL
 string; called **without** arguments it returns the generator, so you can chain
-`->generate()`. Use it when you want the raw URL rather than a full tag — for an
-Open Graph tag, a header, or a redirect:
+`->generate()`. Echoing a bare `canonical()` throws — it is an object, not a
+string — so always finish the call. Use it when you want the raw URL rather than
+a full tag — for an Open Graph tag, a header, or a redirect:
 
 ```blade
 <head>
@@ -75,7 +76,7 @@ Open Graph tag, a header, or a redirect:
     <link rel="canonical" href="{{ canonical()->generate() }}" />
 
     {{-- Reuse the same URL elsewhere --}}
-    <meta property="og:url" content="{{ canonical() }}" />
+    <meta property="og:url" content="{{ canonical()->generate() }}" />
 </head>
 ```
 
