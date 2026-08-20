@@ -68,9 +68,9 @@ Query parameters are preserved under both settings.
 
 ## Domain validation
 
-The domain is validated the first time a URL is generated. It must be a
-syntactically valid URL, use the `http` or `https` scheme, and include a host —
-otherwise a `CanonicalConfigurationException` is thrown:
+The domain is validated on first use. It must be a syntactically valid URL, use
+the `http` or `https` scheme, and include a host — otherwise a
+`CanonicalConfigurationException` is thrown:
 
 ```php
 CANONICAL_DOMAIN=https://example.com   // ✓ valid

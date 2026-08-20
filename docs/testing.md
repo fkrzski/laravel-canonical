@@ -76,8 +76,8 @@ it('renders the directive', function (): void {
 
 ## Asserting on the configuration exception
 
-An unset or malformed domain throws `CanonicalConfigurationException` on the first
-generate call:
+The domain is only validated on first use, so the assertion has to trigger one.
+An unset or malformed domain throws `CanonicalConfigurationException`:
 
 ```php
 use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;

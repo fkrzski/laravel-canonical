@@ -65,7 +65,7 @@ explicit path rather than the current request.
 
 ## The configuration exception
 
-The canonical domain is validated the first time a URL is generated. An unset or
+The canonical domain is validated on first use, not at boot. An unset or
 malformed domain throws `CanonicalConfigurationException` rather than emitting a
 broken tag:
 

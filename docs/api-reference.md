@@ -93,7 +93,9 @@ with `e()`. The optional expression is a path string or variable.
 ### `CanonicalConfigurationException`
 
 `Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException` extends
-`Exception`. Thrown the first time a URL is generated when the canonical domain is:
+`Exception`. Thrown when the generator is first resolved from the container — in
+practice the first time you ask for a URL, including a bare `canonical()`. Raised
+when the canonical domain is:
 
 - unset or empty (`Canonical domain is not set in config.`),
 - not a syntactically valid URL,
