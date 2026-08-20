@@ -1,0 +1,103 @@
+---
+title: Blade integration
+description: Emit the canonical link tag in Blade — the x-canonical component, the @canonical directive, and the canonical() helper, and when to reach for each.
+---
+
+import { Aside, FileTree, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Three ways to emit a `<link rel="canonical">` tag from a template. All three go
+through the same generator and produce identical output.
+
+## Emitting the tag
+
+<Tabs syncKey="canonical-api">
+  <TabItem label="Component">
+    ```blade title="resources/views/components/layouts/app.blade.php"
+    <head>
+        <x-canonical />                                {{-- current request --}}
+        <x-canonical path="/products/item" />          {{-- a specific path --}}
+        <x-canonical :path="$post->canonical_path" />  {{-- a dynamic path --}}
+    </head>
+    ```
+
+    An empty string or `/` for `path` falls back to the bare canonical domain.
+  </TabItem>
+  <TabItem label="Directive">
+    ```blade title="resources/views/components/layouts/app.blade.php"
+    <head>
+        @canonical                       {{-- current request --}}
+        @canonical('/products/item')     {{-- a string literal --}}
+        @canonical($canonicalPath)       {{-- a variable --}}
+    </head>
+    ```
+
+    The directive escapes the URL with `e()` before printing, so query strings are
+    safe inside the attribute.
+  </TabItem>
+  <TabItem label="Helper">
+    ```blade title="resources/views/components/layouts/app.blade.php"
+    <head>
+        <link rel="canonical" href="{{ canonical('/products/item') }}" />
+        <link rel="canonical" href="{{ canonical()->generate() }}" />
+        <meta property="og:url" content="{{ canonical()->generate() }}" />
+    </head>
+    ```
+
+    You write the tag yourself, so the same URL can appear in more than one place.
+  </TabItem>
+</Tabs>
+
+The emitted tag is a single, HTML-escaped line:
+
+```html
+<link rel="canonical" href="https://example.com/products/item" />
+```
+
+<Aside type="caution" title="canonical() with no argument is not a string">
+Without arguments the helper returns the **generator**, not a URL, so
+`{{ canonical() }}` throws. Finish the call when you echo it:
+
+```blade
+<link rel="canonical" href="{{ canonical() }}" />             {{-- ✗ --}}
+<link rel="canonical" href="{{ canonical()->generate() }}" /> {{-- ✓ --}}
+```
+</Aside>
+
+## Which one to use
+
+- **`<x-canonical>`** — the clearest default, and the only form that takes a bound
+  attribute (`:path="$…"`).
+- **`@canonical`** — the same tag with the least markup, for a literal or a plain
+  variable.
+- **`canonical()`** — when you want the URL *string* rather than a `<link>` tag.
+
+The helper is not Blade-specific — it works anywhere in the application:
+
+```php title="app/Http/Controllers/ProductController.php"
+$url       = canonical('/products/item'); // "https://example.com/products/item"
+$generator = canonical();                 // CanonicalUrlGeneratorInterface instance
+```
+
+## Publishing the view
+
+The component's markup lives in a package view. Publish it to customise the tag:
+
+```bash
+php artisan vendor:publish --tag="canonical-views"
+```
+
+<FileTree>
+
+- resources/views/vendor/canonical/
+  - components/
+    - **canonical.blade.php** your copy wins over the packaged one
+
+</FileTree>
+
+The view receives a `$canonicalUrl` callable, so a customised tag keeps the same
+generation logic:
+
+```blade title="resources/views/vendor/canonical/components/canonical.blade.php" ins={2}
+<link rel="canonical" href="{{ $canonicalUrl() }}" />
+<link rel="alternate" hreflang="en" href="{{ $canonicalUrl() }}" />
+```

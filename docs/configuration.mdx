@@ -1,0 +1,130 @@
+---
+title: Configuration
+description: Configure the canonical domain and trailing-slash handling — the published config file, the two environment variables, and how the domain is validated.
+---
+
+import { Aside, Badge, FileTree, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Two values control everything: the **canonical domain** every URL is built from,
+and whether **trailing slashes** are trimmed. Both read from the environment, so
+publishing the config file is optional.
+
+<Tabs syncKey="canonical-config-source">
+  <TabItem label="Environment">
+    ```dotenv title=".env"
+    CANONICAL_DOMAIN=https://example.com
+    CANONICAL_TRIM_TRAILING_SLASH=true
+    ```
+  </TabItem>
+  <TabItem label="Config file">
+    ```php title="config/canonical.php"
+    return [
+        'domain' => 'https://example.com',
+        'trim_trailing_slash' => true,
+    ];
+    ```
+  </TabItem>
+</Tabs>
+
+## The config file
+
+The service provider merges its own config, so the package runs without
+publishing anything. Publish only to keep the defaults in your repo:
+
+```bash
+php artisan vendor:publish --tag="canonical-config"
+```
+
+<FileTree>
+
+- config/
+  - **canonical.php**
+
+</FileTree>
+
+```php title="config/canonical.php"
+return [
+    // The domain every canonical URL is built from. Falls back to APP_URL,
+    // then http://localhost, when CANONICAL_DOMAIN is unset.
+    'domain' => env('CANONICAL_DOMAIN', env('APP_URL', 'http://localhost')),
+
+    // Trim trailing slashes from generated URLs (/blog/ → /blog). @since 1.1.0
+    'trim_trailing_slash' => env('CANONICAL_TRIM_TRAILING_SLASH', true),
+];
+```
+
+## The canonical domain
+
+Every generated URL is built from this value, never from the host the request
+arrived on:
+
+```dotenv title=".env"
+CANONICAL_DOMAIN=https://example.com
+```
+
+Unset, it falls back to `APP_URL`, then to `http://localhost`.
+
+<Aside type="caution" title="Set it explicitly in production">
+The fallback chain is a convenience for local development. If `APP_URL` differs
+between deployments, staging and production will each declare themselves
+canonical. Pin `CANONICAL_DOMAIN` to the host you want indexed.
+</Aside>
+
+## Trailing-slash handling
+
+<Badge text="since 1.1.0" variant="tip" size="medium" />
+
+Trailing slashes are trimmed by default, so `/blog/` and `/blog` collapse to one
+URL. Turn it off when the two are distinct routes:
+
+```dotenv title=".env"
+CANONICAL_TRIM_TRAILING_SLASH=false
+```
+
+| Input | `true` (default) | `false` |
+| --- | --- | --- |
+| `/blog/` | `https://example.com/blog` | `https://example.com/blog/` |
+| `/blog` | `https://example.com/blog` | `https://example.com/blog` |
+| `/` | `https://example.com` | `https://example.com` |
+
+Query parameters are preserved under both settings.
+
+## Domain validation
+
+The domain is validated on first use. It must be a valid URL, use the `http` or
+`https` scheme, and include a host:
+
+```dotenv title=".env" ins={1-3}
+CANONICAL_DOMAIN=https://example.com
+CANONICAL_DOMAIN=http://localhost:8000
+CANONICAL_DOMAIN=https://example.com/
+```
+
+A trailing slash on the domain is stripped before validation, so the third form
+behaves like the first. These throw `CanonicalConfigurationException`:
+
+```dotenv title=".env" del={1-3}
+CANONICAL_DOMAIN=example.com
+CANONICAL_DOMAIN=ftp://example.com
+CANONICAL_DOMAIN=
+```
+
+| Value | Why it fails |
+| --- | --- |
+| `example.com` | No scheme, so not a syntactically valid URL. |
+| `ftp://example.com` | Valid URL, but only `http` and `https` are allowed. |
+| *(empty)* | `Canonical domain is not set in config.` |
+
+<Aside type="tip" title="It fails on first use, not on boot">
+The provider is deferred, so a bad domain surfaces on the first page render, not
+at boot. A [test asserting the exception](/laravel-canonical/testing#asserting-on-the-configuration-exception)
+catches it before deploy.
+</Aside>
+
+## Version compatibility
+
+| Package version | PHP version | Laravel version |
+| --- | --- | --- |
+| 1.4.x+ | 8.4+ | 12.x, 13.x |
+| 1.3.x+ | 8.4+ | 11.x, 12.x |
+| 1.0.x – 1.2.x | 8.3+ | 11.x, 12.x |

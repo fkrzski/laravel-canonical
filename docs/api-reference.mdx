@@ -1,0 +1,138 @@
+---
+title: API reference
+description: Every laravel-canonical entry point — the Canonical facade, the canonical() helper, the x-canonical component, and the @canonical directive, with signatures.
+---
+
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+Every entry point routes through `CanonicalUrlGeneratorInterface`, resolved from
+the container. The facade, helper, component, and directive are thin wrappers over
+its single `generate()` method.
+
+| Entry point | Returns | Available in |
+| --- | --- | --- |
+| [`Canonical::generate()`](#canonical-facade) | `string` | PHP, Blade |
+| [`canonical()`](#canonical-helper) | `string` or the generator | PHP, Blade |
+| [`<x-canonical>`](#x-canonical-component) | `<link>` tag | Blade |
+| [`@canonical`](#canonical-directive) | `<link>` tag | Blade |
+
+## `Canonical` facade
+
+`Fkrzski\LaravelCanonical\Facades\Canonical`.
+
+```php frame="none"
+Canonical::generate(?string $path = null): string
+```
+
+<Badge text="throws CanonicalConfigurationException" variant="danger" size="small" />
+
+Builds the canonical URL for `$path`, joined onto the configured
+[canonical domain](/laravel-canonical/configuration#the-canonical-domain). With no
+argument it canonicalises the current request URI, query string included.
+
+```php
+use Fkrzski\LaravelCanonical\Facades\Canonical;
+
+Canonical::generate();                 // current request
+Canonical::generate('/products/item'); // https://example.com/products/item
+Canonical::generate('/');              // https://example.com
+```
+
+## `canonical()` helper
+
+```php frame="none"
+canonical(?string $path = null): CanonicalUrlGeneratorInterface|string
+```
+
+<Badge text="throws CanonicalConfigurationException" variant="danger" size="small" />
+
+Called **with** a path it returns the URL string; called **without** arguments it
+returns the generator for fluent use.
+
+```php
+$url       = canonical('/products/item'); // "https://example.com/products/item"
+$generator = canonical();                 // fluent generator
+$url       = canonical()->generate('/products/item');
+```
+
+<Aside type="tip" title="The return type narrows for you">
+The declared return type is conditional
+(`($path is null ? CanonicalUrlGeneratorInterface : string)`), so PHPStan resolves
+each call site to one concrete type — no assertions needed.
+</Aside>
+
+## `<x-canonical>` component
+
+`Fkrzski\LaravelCanonical\View\Components\Canonical`, registered as `x-canonical`.
+
+<Badge text="throws CanonicalConfigurationException" variant="danger" size="small" />
+
+Renders a complete, HTML-escaped `<link rel="canonical" href="…" />` tag.
+
+| Attribute | Type | Default | Description |
+| --- | --- | --- | --- |
+| `path` | `?string` | `null` | Path to canonicalise. `null`, `''`, and `'/'` fall back to the bare domain. |
+
+```blade
+<x-canonical />
+<x-canonical path="/products/item" />
+<x-canonical :path="$post->canonical_path" />
+```
+
+## `@canonical` directive
+
+```blade frame="none"
+@canonical(?string $expression = null)
+```
+
+<Badge text="throws CanonicalConfigurationException" variant="danger" size="small" />
+
+Echoes the same tag as the component, escaping the URL with `e()`. The optional
+expression is a path string or variable.
+
+```blade
+@canonical
+@canonical('/products/item')
+@canonical($canonicalPath)
+```
+
+## `CanonicalConfigurationException`
+
+`Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException` extends
+`Exception`. Thrown when the generator is first resolved from the container —
+in practice the first time you ask for a URL, including a bare `canonical()`.
+Raised when the domain is:
+
+| Condition | Message |
+| --- | --- |
+| Unset or empty | `Canonical domain is not set in config.` |
+| Not a valid URL | `Invalid URL format: '…'. Expected a valid URL.` |
+| Scheme other than `http`/`https` | `Invalid URL scheme for '…'. Only 'http' and 'https' schemes are allowed.` |
+| Missing host | `Missing host in URL: '…'.` |
+
+See [domain validation](/laravel-canonical/configuration#domain-validation) for the
+accepted forms.
+
+## Container bindings
+
+The [deferred](https://laravel.com/docs/providers#deferred-providers) provider
+binds these contracts as singletons:
+
+| Contract | Bound to |
+| --- | --- |
+| `CanonicalUrlGeneratorInterface` | `CanonicalUrlGenerator` |
+| `CanonicalConfigInterface` | `CanonicalConfig` |
+| `CanonicalUrlBuilderInterface` | `CanonicalUrlBuilder` |
+| `BaseUrlValidatorInterface` | `BaseUrlValidator` |
+
+Rebind any of them to swap in your own implementation:
+
+```php title="app/Providers/AppServiceProvider.php"
+$this->app->singleton(CanonicalUrlBuilderInterface::class, MyUrlBuilder::class);
+```
+
+Or resolve the generator directly instead of going through the facade:
+
+```php
+$url = app(CanonicalUrlGeneratorInterface::class)->generate('/products/item');
+```
