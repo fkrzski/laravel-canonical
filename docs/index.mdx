@@ -1,0 +1,106 @@
+---
+title: laravel-canonical
+description: Laravel package for canonical URLs that prevents duplicate-content SEO issues — a Canonical facade, a canonical() helper, a Blade component, and a directive.
+repository: https://github.com/fkrzski/laravel-canonical
+packagist: fkrzski/laravel-canonical
+status: stable
+---
+
+import { Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+A lightweight Laravel package for canonical URLs. Every URL is normalised against
+one configured domain, so duplicate content collapses to a single address.
+
+## Why laravel-canonical
+
+- **One canonical domain** — URLs are built from the configured domain, never
+  from the host the request arrived on.
+- **Deterministic normalisation** — trailing slashes trimmed, query parameters
+  preserved, root path collapsed to the bare domain.
+- **Four ways to emit it** — the `Canonical` facade, the `canonical()` helper,
+  the `<x-canonical>` component, and the `@canonical` directive.
+- **Validated configuration** — a missing or malformed domain throws
+  `CanonicalConfigurationException` instead of emitting a broken tag.
+- **Deferred and Octane-safe** — nothing resolves until you first ask for a URL.
+
+## Requirements
+
+- PHP 8.4 or higher
+- Laravel 12.x or 13.x
+
+Older release lines support PHP 8.3 and Laravel 11 — see
+[version compatibility](/laravel-canonical/configuration#version-compatibility).
+
+## Installation
+
+<Steps>
+
+1. Require the package. The service provider and facade are auto-discovered.
+
+   ```bash
+   composer require fkrzski/laravel-canonical
+   ```
+
+2. Set the canonical domain. Falls back to `APP_URL`, then `http://localhost`.
+
+   ```dotenv title=".env"
+   CANONICAL_DOMAIN=https://example.com
+   ```
+
+3. Emit the tag in your layout.
+
+   ```blade title="resources/views/components/layouts/app.blade.php"
+   <head>
+       <x-canonical />
+   </head>
+   ```
+
+4. Optionally publish the config to override the defaults.
+
+   ```bash
+   php artisan vendor:publish --tag="canonical-config"
+   ```
+
+</Steps>
+
+## Quickstart
+
+The same canonical URL, four ways:
+
+<Tabs syncKey="canonical-api">
+  <TabItem label="Component">
+    ```blade
+    <x-canonical />                          {{-- current request --}}
+    <x-canonical path="/products/item" />
+    ```
+  </TabItem>
+  <TabItem label="Directive">
+    ```blade
+    @canonical                          {{-- current request --}}
+    @canonical('/products/item')
+    ```
+  </TabItem>
+  <TabItem label="Facade">
+    ```php
+    use Fkrzski\LaravelCanonical\Facades\Canonical;
+
+    Canonical::generate();                 // current request
+    Canonical::generate('/products/item'); // https://example.com/products/item
+    ```
+  </TabItem>
+  <TabItem label="Helper">
+    ```php
+    canonical()->generate();     // current request
+    canonical('/products/item'); // https://example.com/products/item
+    ```
+  </TabItem>
+</Tabs>
+
+The component and the directive render the complete tag:
+
+```html
+<link rel="canonical" href="https://example.com/products/item" />
+```
+
+The facade and the helper return the URL as a `string`, for reuse in an Open
+Graph tag, a header, or a redirect.

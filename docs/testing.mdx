@@ -1,0 +1,227 @@
+---
+title: Testing
+description: Test canonical URLs with Pest and Testbench — set the domain in config, assert on generated strings, and assert on the rendered Blade component and directive.
+---
+
+import { Aside, Steps, Tabs, TabItem } from '@astrojs/starlight/components';
+
+The package makes no HTTP calls, so there is nothing to fake. Point
+`canonical.domain` at a known host and assert on the string or tag that comes out.
+
+## Setting the domain
+
+<Tabs syncKey="php-test-runner">
+  <TabItem label="Pest">
+    ```php title="tests/Feature/CanonicalTest.php"
+    use Fkrzski\LaravelCanonical\Facades\Canonical;
+
+    beforeEach(function (): void {
+        config(['canonical.domain' => 'https://example.com']);
+    });
+    ```
+  </TabItem>
+  <TabItem label="PHPUnit">
+    ```php title="tests/Feature/CanonicalTest.php"
+    use Fkrzski\LaravelCanonical\Facades\Canonical;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config(['canonical.domain' => 'https://example.com']);
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+<Aside type="note" title="Register the provider in Testbench">
+Testbench boots a bare application, so the provider is not auto-discovered —
+declare it and the facade alias on your test case:
+
+```php title="tests/TestCase.php"
+protected function getPackageProviders($app): array
+{
+    return [CanonicalServiceProvider::class];
+}
+
+protected function getPackageAliases($app): array
+{
+    return ['Canonical' => Canonical::class];
+}
+```
+</Aside>
+
+## Asserting on generated URLs
+
+<Tabs syncKey="php-test-runner">
+  <TabItem label="Pest">
+    ```php title="tests/Feature/CanonicalTest.php"
+    it('generates a canonical URL for a path', function (): void {
+        expect(Canonical::generate('/products/item'))
+            ->toBe('https://example.com/products/item');
+    });
+
+    it('normalises the root path to the bare domain', function (): void {
+        expect(Canonical::generate('/'))->toBe('https://example.com');
+    });
+    ```
+  </TabItem>
+  <TabItem label="PHPUnit">
+    ```php title="tests/Feature/CanonicalTest.php"
+    public function test_it_generates_a_canonical_url_for_a_path(): void
+    {
+        $this->assertSame(
+            'https://example.com/products/item',
+            Canonical::generate('/products/item'),
+        );
+    }
+
+    public function test_it_normalises_the_root_path_to_the_bare_domain(): void
+    {
+        $this->assertSame('https://example.com', Canonical::generate('/'));
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Asserting on the current request
+
+Bind a request into the container to exercise the no-argument path. The staging
+host proves the URL is built from the canonical domain, not the request:
+
+<Tabs syncKey="php-test-runner">
+  <TabItem label="Pest">
+    ```php title="tests/Feature/CanonicalTest.php" {5}
+    use Illuminate\Http\Request;
+
+    it('canonicalises the current request', function (): void {
+        $this->app->instance('request', Request::create('https://staging.example.com/blog/post'));
+
+        expect(Canonical::generate())->toBe('https://example.com/blog/post');
+    });
+    ```
+  </TabItem>
+  <TabItem label="PHPUnit">
+    ```php title="tests/Feature/CanonicalTest.php" {8}
+    use Illuminate\Http\Request;
+
+    public function test_it_canonicalises_the_current_request(): void
+    {
+        $this->app->instance(
+            'request',
+            Request::create('https://staging.example.com/blog/post'),
+        );
+
+        $this->assertSame('https://example.com/blog/post', Canonical::generate());
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Asserting on rendered Blade
+
+`Blade::render()` keeps the template's surrounding whitespace, so trim before
+comparing:
+
+<Tabs syncKey="php-test-runner">
+  <TabItem label="Pest">
+    ```php title="tests/Feature/CanonicalComponentTest.php"
+    use Illuminate\Support\Facades\Blade;
+
+    it('renders the canonical component', function (): void {
+        $html = trim(Blade::render('<x-canonical path="/products/item" />'));
+
+        expect($html)->toBe('<link rel="canonical" href="https://example.com/products/item" />');
+    });
+
+    it('renders the directive', function (): void {
+        $html = trim(Blade::render("@canonical('/products/item')"));
+
+        expect($html)->toBe('<link rel="canonical" href="https://example.com/products/item" />');
+    });
+    ```
+  </TabItem>
+  <TabItem label="PHPUnit">
+    ```php title="tests/Feature/CanonicalComponentTest.php"
+    use Illuminate\Support\Facades\Blade;
+
+    public function test_it_renders_the_canonical_component(): void
+    {
+        $html = trim(Blade::render('<x-canonical path="/products/item" />'));
+
+        $this->assertSame(
+            '<link rel="canonical" href="https://example.com/products/item" />',
+            $html,
+        );
+    }
+
+    public function test_it_renders_the_directive(): void
+    {
+        $html = trim(Blade::render("@canonical('/products/item')"));
+
+        $this->assertSame(
+            '<link rel="canonical" href="https://example.com/products/item" />',
+            $html,
+        );
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Asserting on the configuration exception
+
+The domain is only validated on first use, so the assertion has to trigger one:
+
+<Tabs syncKey="php-test-runner">
+  <TabItem label="Pest">
+    ```php title="tests/Feature/CanonicalConfigTest.php"
+    use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;
+
+    it('rejects a domain without a scheme', function (): void {
+        config(['canonical.domain' => 'example.com']);
+
+        expect(fn (): string => Canonical::generate('/page'))
+            ->toThrow(CanonicalConfigurationException::class);
+    });
+    ```
+  </TabItem>
+  <TabItem label="PHPUnit">
+    ```php title="tests/Feature/CanonicalConfigTest.php"
+    use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;
+
+    public function test_it_rejects_a_domain_without_a_scheme(): void
+    {
+        config(['canonical.domain' => 'example.com']);
+
+        $this->expectException(CanonicalConfigurationException::class);
+
+        Canonical::generate('/page');
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Running the package's own suite
+
+<Steps>
+
+1. Install the development dependencies.
+
+   ```bash
+   composer install
+   ```
+
+2. Run the full quality gate — Pint, Rector, PHPStan, type coverage, and a
+   mutation-tested Pest run.
+
+   ```bash
+   composer test
+   ```
+
+3. Or just the unit suite while iterating.
+
+   ```bash
+   composer test:unit
+   ```
+
+</Steps>

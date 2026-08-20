@@ -1,0 +1,93 @@
+---
+title: Guide
+description: Generate canonical URLs with the Canonical facade — from the current request or an explicit path, how normalisation works, and the configuration exception.
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+Everything routes through one generator: the facade, the helper, the Blade
+component, and the directive all build the same string the same way.
+
+## Generating a URL
+
+Call `generate()` with no argument to canonicalise the **current request**, or
+pass a path to override it. The helper is a shortcut that resolves the same
+generator out of the container:
+
+<Tabs syncKey="canonical-api">
+  <TabItem label="Facade">
+    ```php
+    use Fkrzski\LaravelCanonical\Facades\Canonical;
+
+    Canonical::generate();                 // request /blog/post → https://example.com/blog/post
+    Canonical::generate('/products/item'); // https://example.com/products/item
+    ```
+  </TabItem>
+  <TabItem label="Helper">
+    ```php
+    canonical()->generate();     // request /blog/post → https://example.com/blog/post
+    canonical('/products/item'); // https://example.com/products/item
+    ```
+  </TabItem>
+</Tabs>
+
+The path is joined onto the configured
+[canonical domain](/laravel-canonical/configuration#the-canonical-domain), never
+the host the request arrived on — so a request to a staging or `www` host still
+emits the canonical apex URL.
+
+## How a path is normalised
+
+- A **leading slash is optional** — `generate('blog')` and `generate('/blog')` are equivalent.
+- A **trailing slash is trimmed** by default — see [trailing-slash handling](/laravel-canonical/configuration#trailing-slash-handling).
+- The **root path collapses to the bare domain**, with no trailing slash.
+- **Query parameters are preserved** — they are part of the path and pass through untouched.
+
+```php
+// Domain: https://example.com
+Canonical::generate('/blog/');         // https://example.com/blog
+Canonical::generate('blog');           // https://example.com/blog
+Canonical::generate('/');              // https://example.com
+Canonical::generate('/blog/post/123'); // https://example.com/blog/post/123
+```
+
+## Query parameters
+
+`generate()` reads the request URI, not just the path, so query strings on the
+current request are carried through:
+
+```php
+// Request: /search?q=laravel&page=2
+Canonical::generate(); // https://example.com/search?q=laravel&page=2
+
+// An explicit path overrides the request entirely.
+Canonical::generate('/search?q=laravel'); // https://example.com/search?q=laravel
+```
+
+<Aside type="caution" title="Tracking parameters are not stripped">
+A request carrying `?utm_source=…` canonicalises to a URL that still contains it,
+and search engines treat that as a distinct address. To drop tracking parameters,
+generate from an explicit path rather than the current request:
+
+```php
+Canonical::generate('/products/'.$product->slug);
+```
+</Aside>
+
+## The configuration exception
+
+The domain is validated on first use, not at boot. An unset or malformed domain
+throws `CanonicalConfigurationException` rather than emitting a broken tag:
+
+```php
+use Fkrzski\LaravelCanonical\Exceptions\CanonicalConfigurationException;
+
+try {
+    Canonical::generate('/page');
+} catch (CanonicalConfigurationException $e) {
+    // Domain missing, or not a valid http/https URL.
+}
+```
+
+Which values are accepted is covered in
+[domain validation](/laravel-canonical/configuration#domain-validation).
