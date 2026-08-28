@@ -6,6 +6,8 @@
 
 A lightweight Laravel package for generating canonical URLs to prevent duplicate content issues and improve SEO. Automatically normalizes URLs by removing trailing slashes while preserving query parameters.
 
+It powers the canonical tags on [Dead by Stats](https://deadbystats.eu).
+
 ## Version Compatibility
 
 | Package Version | PHP Version | Laravel Version |
