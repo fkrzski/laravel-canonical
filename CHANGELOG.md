@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.4.2 - 2026-10-14
+
+### What's Changed
+
+* docs: convert pages to MDX with Starlight components by @fkrzski in https://github.com/fkrzski/laravel-canonical/pull/13
+* docs: drop component imports by @fkrzski in https://github.com/fkrzski/laravel-canonical/pull/14
+
+**Full Changelog**: https://github.com/fkrzski/laravel-canonical/compare/1.4.1...1.4.2
+
 ## 1.4.1 - 2026-07-26
 
 ### What's Changed
