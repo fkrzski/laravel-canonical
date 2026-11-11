@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.4] - 2026-11-11
+
+### Changed
+
+- Publishing a release rebuilds [docs.fkrzski.dev/laravel-canonical](https://docs.fkrzski.dev/laravel-canonical), so the pages a release ships are live with it instead of waiting for whatever build the docs site ran next ([#17](https://github.com/fkrzski/laravel-canonical/pull/17)).
+- The order of the documentation pages is set in the repository by `docs/_meta.json` — the guide, the configuration, the Blade page, then testing — so the sidebar keeps that order now that the docs site discovers pages by itself ([#17](https://github.com/fkrzski/laravel-canonical/pull/17)).
+
 ## [1.4.3] - 2026-10-15
 
 ### Changed
@@ -78,7 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CanonicalConfigurationException`, thrown when the configured domain is empty, is not a valid URL, uses a scheme other than `http` or `https`, or carries no host.
 - `CanonicalServiceProvider`, a deferred provider binding `BaseUrlValidatorInterface`, `CanonicalConfigInterface`, `CanonicalUrlBuilderInterface` and `CanonicalUrlGeneratorInterface` as singletons, each of them replaceable.
 
-[Unreleased]: https://github.com/fkrzski/laravel-canonical/compare/1.4.3...HEAD
+[Unreleased]: https://github.com/fkrzski/laravel-canonical/compare/1.4.4...HEAD
+[1.4.4]: https://github.com/fkrzski/laravel-canonical/compare/1.4.3...1.4.4
 [1.4.3]: https://github.com/fkrzski/laravel-canonical/compare/1.4.2...1.4.3
 [1.4.2]: https://github.com/fkrzski/laravel-canonical/compare/1.4.1...1.4.2
 [1.4.1]: https://github.com/fkrzski/laravel-canonical/compare/1.4.0...1.4.1
