@@ -35,4 +35,4 @@ jobs:
 
     # Bumped by hand: Dependabot doesn't read npx calls.
     - name: Validate docs
-      run: npx --yes @fkrzski/docs-schema@0.3.0 docs
+      run: npx --yes @fkrzski/docs-schema@0.5.0 docs
