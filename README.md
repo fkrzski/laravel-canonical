@@ -12,7 +12,8 @@ It powers the canonical tags on [Dead by Stats](https://deadbystats.eu).
 
 | Package Version | PHP Version | Laravel Version |
 |-----------------|-------------|-----------------|
-| 1.4.x+          | 8.4+        | 12.x, 13.x      |
+| 2.0.x+          | 8.5+        | 12.x, 13.x      |
+| 1.4.x           | 8.4+        | 12.x, 13.x      |
 | 1.3.x+          | 8.4+        | 11.x, 12.x      |
 | 1.0.x - 1.2.x   | 8.3+        | 11.x, 12.x      |
 
