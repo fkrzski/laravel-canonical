@@ -109,4 +109,4 @@ jobs:
 
     - name: Run tests without coverage
       if: ${{ matrix.coverage == 'none' }}
-      run: vendor/bin/pest --parallel
+      run: vendor/bin/pest --parallel --no-coverage
