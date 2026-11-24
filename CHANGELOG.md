@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- PHP 8.6 support: the test matrix runs on 8.5 and 8.6, where 8.6 goes without coverage and mutation testing until pcov or Xdebug builds for it ([#19](https://github.com/fkrzski/laravel-canonical/pull/19)).
+
+### Removed
+
+- **BC break.** PHP 8.4 support; the package requires PHP `^8.5`, where 1.4.4 still installed on 8.4 ([#19](https://github.com/fkrzski/laravel-canonical/pull/19)).
+
 ## [1.4.4] - 2026-11-11
 
 ### Changed
