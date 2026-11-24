@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- PHP 8.6 support: the test matrix runs on 8.5 and 8.6, where 8.6 goes without coverage and mutation testing until pcov or Xdebug builds for it ([#19](https://github.com/fkrzski/laravel-canonical/pull/19)).
+- PHP 8.6 support, tested against Laravel 13: the toolchain Laravel 12 pins cannot install on 8.6, so the matrix leaves that pair out, and 8.6 runs without coverage and mutation testing until pcov or Xdebug builds for it ([#19](https://github.com/fkrzski/laravel-canonical/pull/19)).
 
 ### Removed
 
