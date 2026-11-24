@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-24
+
 ### Added
 
 - PHP 8.6 support, tested against Laravel 13: the toolchain Laravel 12 pins cannot install on 8.6, so the matrix leaves that pair out, and 8.6 runs without coverage and mutation testing until pcov or Xdebug builds for it ([#19](https://github.com/fkrzski/laravel-canonical/pull/19)).
@@ -93,7 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `CanonicalConfigurationException`, thrown when the configured domain is empty, is not a valid URL, uses a scheme other than `http` or `https`, or carries no host.
 - `CanonicalServiceProvider`, a deferred provider binding `BaseUrlValidatorInterface`, `CanonicalConfigInterface`, `CanonicalUrlBuilderInterface` and `CanonicalUrlGeneratorInterface` as singletons, each of them replaceable.
 
-[Unreleased]: https://github.com/fkrzski/laravel-canonical/compare/1.4.4...HEAD
+[Unreleased]: https://github.com/fkrzski/laravel-canonical/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/fkrzski/laravel-canonical/compare/1.4.4...2.0.0
 [1.4.4]: https://github.com/fkrzski/laravel-canonical/compare/1.4.3...1.4.4
 [1.4.3]: https://github.com/fkrzski/laravel-canonical/compare/1.4.2...1.4.3
 [1.4.2]: https://github.com/fkrzski/laravel-canonical/compare/1.4.1...1.4.2
