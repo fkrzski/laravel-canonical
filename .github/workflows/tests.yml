@@ -63,6 +63,11 @@ jobs:
           # Neither pcov nor Xdebug builds on PHP 8.6 yet.
           - php: 8.6
             coverage: none
+        exclude:
+          # Pest 5, the only line that installs on 8.6, needs
+          # symfony/process ^8.1, which Laravel 12 caps at ^7.2.
+          - php: 8.6
+            laravel: 12
 
     name: Tests P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
 
