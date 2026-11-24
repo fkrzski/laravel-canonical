@@ -33,6 +33,11 @@ describe('URL Validation - Invalid Formats', function (): void {
             ->toThrow(CanonicalConfigurationException::class, "Invalid URL format: 'http://'. Expected a valid URL.");
     });
 
+    it('throws exception for host "0", which PHP reads as empty', function (): void {
+        expect(fn () => (new BaseUrlValidator)->validate('http://0'))
+            ->toThrow(CanonicalConfigurationException::class, "Missing host in URL: 'http://0'.");
+    });
+
     it('throws exception for empty string', function (): void {
         expect(fn () => (new BaseUrlValidator)->validate(''))
             ->toThrow(CanonicalConfigurationException::class, "Invalid URL format: ''. Expected a valid URL.");

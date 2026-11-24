@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
-use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Renaming\Rector\MethodCall\RenameMethodRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
@@ -40,7 +39,6 @@ return static function (RectorConfig $rectorConfig): void {
     ]);
 
     $rectorConfig->skip([
-        AddOverrideAttributeToOverriddenMethodsRector::class,
         RenameMethodRector::class,
     ]);
 
@@ -72,11 +70,11 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->sets([
         LaravelSetList::LARAVEL_120,
         LaravelLevelSetList::UP_TO_LARAVEL_120,
-        LevelSetList::UP_TO_PHP_84,
+        LevelSetList::UP_TO_PHP_85,
         SetList::CODE_QUALITY,
         SetList::DEAD_CODE,
         SetList::EARLY_RETURN,
-        SetList::PHP_84,
+        SetList::PHP_85,
         SetList::TYPE_DECLARATION,
     ]);
 };

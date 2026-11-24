@@ -52,7 +52,7 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.4, 8.5]
+        php: [8.5, 8.6]
         laravel: [12, 13]
         dependency-version: [prefer-lowest, prefer-stable]
         include:
@@ -60,6 +60,14 @@ jobs:
             testbench: "^10.5"
           - laravel: 13
             testbench: "^11.0"
+          # Neither pcov nor Xdebug builds on PHP 8.6 yet.
+          - php: 8.6
+            coverage: none
+        exclude:
+          # Pest 5, the only line that installs on 8.6, needs
+          # symfony/process ^8.1, which Laravel 12 caps at ^7.2.
+          - php: 8.6
+            laravel: 12
 
     name: Tests P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.os }} - ${{ matrix.dependency-version }}
 
@@ -73,7 +81,7 @@ jobs:
       with:
         php-version: ${{ matrix.php }}
         extensions: dom, mbstring, zip
-        coverage: pcov
+        coverage: ${{ matrix.coverage || 'pcov' }}
 
     - name: Get Composer cache directory
       id: composer-cache
@@ -96,4 +104,9 @@ jobs:
       run: composer test:syntax
 
     - name: Run tests
+      if: ${{ matrix.coverage != 'none' }}
       run: composer test:unit:mutation
+
+    - name: Run tests without coverage
+      if: ${{ matrix.coverage == 'none' }}
+      run: vendor/bin/pest --parallel --no-coverage
